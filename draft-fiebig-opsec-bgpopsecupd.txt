@@ -745,12 +745,12 @@ Table of Contents
    validation.  Please note that, when signing routing objects,
    operators SHOULD strive to create minimally covering ROAs for their
    intended announcements, see [RFC7115] and [RFC9319], to reduce the
-   attack surface of attempts to exhaust routers' route processing
-   capacity in terms of memory and CPU [KIRIN-22].  For example, if an
-   operator received a /29 allocation and intends to announce it in a
-   deaggregation of /32, the corresponding ROA should cover the /29 with
-   a longest allowed prefix of /32, instead of signing for a
-   deaggregation up until /48.
+   attack surface of forged-origin hijacks and attempts to exhaust
+   routers' route processing capacity in terms of memory and CPU
+   [KIRIN-22].  For example, if an operator received a /29 allocation
+   and intends to announce it in a deaggregation of /32, the
+   corresponding ROA should cover the /29 with a longest allowed prefix
+   of /32, instead of signing for a deaggregation up until /48.
 
    One should understand that the RPKI model brings new, interesting
    challenges.  The paper "On the Risk of Misbehaving RPKI Authorities"

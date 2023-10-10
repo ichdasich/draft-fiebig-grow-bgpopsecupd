@@ -1934,7 +1934,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </ul>
 <p id="section-7.2.1-3">
                         In addition to this, operators <span class="bcp14">SHOULD</span> sign their routing objects so their routes can be validated by other networks running origin validation.
-                        Please note that, when signing routing objects, operators <span class="bcp14">SHOULD</span> strive to create minimally covering ROAs for their intended announcements, see <span>[<a href="#RFC7115" class="cite xref">RFC7115</a>]</span> and <span>[<a href="#RFC9319" class="cite xref">RFC9319</a>]</span>, to reduce the attack surface of attempts to exhaust routers' route processing capacity in terms of memory and CPU <span>[<a href="#KIRIN-22" class="cite xref">KIRIN-22</a>]</span>.
+                        Please note that, when signing routing objects, operators <span class="bcp14">SHOULD</span> strive to create minimally covering ROAs for their intended announcements, see <span>[<a href="#RFC7115" class="cite xref">RFC7115</a>]</span> and <span>[<a href="#RFC9319" class="cite xref">RFC9319</a>]</span>, to reduce the attack surface of forged-origin hijacks and attempts to exhaust routers' route processing capacity in terms of memory and CPU <span>[<a href="#KIRIN-22" class="cite xref">KIRIN-22</a>]</span>.
                         For example, if an operator received a /29 allocation and intends to announce it in a deaggregation of /32, the corresponding ROA should cover the /29 with a longest allowed prefix of /32, instead of signing for a deaggregation up until /48.<a href="#section-7.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.2.1-4">
                         One should understand that the RPKI model brings new, interesting challenges.
