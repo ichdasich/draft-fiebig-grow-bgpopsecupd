@@ -136,10 +136,10 @@ Table of Contents
 
 1.  Introduction
 
-   The Border Gateway Protocol (BGP), specified in RFC 4271 [RFC4271],
-   is the protocol used in the Internet to exchange routing information
-   between network domains.  BGP does not directly include mechanisms
-   that control whether the routes exchanged conform to the various
+   The Border Gateway Protocol (BGP), specified in [RFC4271], is the
+   protocol used in the Internet to exchange routing information between
+   network domains.  BGP does not directly include mechanisms that
+   control whether the routes exchanged conform to the various
    guidelines defined by the Internet community.  This document intends
    to both summarize common existing guidelines and help operators apply
    coherent BGP policies.
@@ -309,15 +309,15 @@ Table of Contents
    for BGP session links.  Options include using IPv4 routes with an
    IPv6 next hop in IPv4 sessions (see [RFC9229]), using prefixes not
    advertised in the GRT ([TBD]), using unnumbered BGP/Link-Local
-   addresses (also using RFC 9229 [RFC9229]), or using RFC 1918
-   [RFC1918] addresses for IPv4 sessions.  Even though routing based
-   network layer protection MAY be implemented, it SHOULD only be done
-   in addition to deploying ACLs.  If any of these approaches is
-   utilized, it MUST be ensured that the BGP speaker originates Path MTU
-   Discovery related packets (see [RFC1191] for IPv4 and [RFC8201] for
-   IPv6) from a globally reachable address, to ensure that Reverse Path
-   Filtering of external parties does not interfere with PMTUD discovery
-   for transiting traffic.
+   addresses (also using [RFC9229]), or using [RFC1918] addresses for
+   IPv4 sessions.  Even though routing based network layer protection
+   MAY be implemented, it SHOULD only be done in addition to deploying
+   ACLs.  If any of these approaches is utilized, it MUST be ensured
+   that the BGP speaker originates Path MTU Discovery related packets
+   (see [RFC1191] for IPv4 and [RFC8201] for IPv6) from a globally
+   reachable address, to ensure that Reverse Path Filtering of external
+   parties does not interfere with PMTUD discovery for transiting
+   traffic.
 
 4.2.  BGP Speaker Management Interface Protection
 
@@ -335,14 +335,14 @@ Table of Contents
 
    In general, filtering and rate-limiting of control-plane traffic is a
    wider topic than "just for BGP".  For further recommendations on how
-   to protect the router's control plane, see RFC 6192 [RFC6192] )
+   to protect the router's control plane, see [RFC6192] )
 
 5.  Protection of the BGP Sessions
 
    Current security issues of TCP-based protocols (therefore including
-   BGP) have been documented in RFC 6952 [RFC6952].  The following
-   subsections list the major points raised in this RFC and give the
-   best practices related to TCP session protection for BGP operation.
+   BGP) have been documented in [RFC6952].  The following subsections
+   list the major points raised in this document and give the best
+   practices related to TCP session protection for BGP operation.
 
 5.1.  Protection of TCP Sessions Used by BGP
 
@@ -356,13 +356,13 @@ Table of Contents
 
 5.1.1.  Integrity Verification and Authentication
 
-   MD5 protection of the TCP session header, described in RFC 2385
-   [RFC2385], was the first available mechanism to protect the integrity
-   of a BGP session.  It has been obsoleted by the TCP Authentication
-   Option (TCP-AO; RFC 5925 [RFC5925]), which offers stronger
-   protection.  While MD5 is still the most used mechanism due to its
-   availability in vendors' equipment, TCP-AO SHOULD be preferred when
-   implemented by both sides of a session.
+   MD5 protection of the TCP session header, described in [RFC2385], was
+   the first available mechanism to protect the integrity of a BGP
+   session.  It has been obsoleted by the TCP Authentication Option
+   (TCP-AO; [RFC5925]), which offers stronger protection.  While MD5 is
+   still the most used mechanism due to its availability in vendors'
+   equipment, TCP-AO SHOULD be preferred when implemented by both sides
+   of a session.
 
    IPsec could also be used for session protection.  At the time of
    publication, there has been no wide-spread adoption of using IPsec
@@ -379,11 +379,11 @@ Table of Contents
 
    Furthermore, operators SHOULD block spoofed packets (packets with a
    source IP address not belonging to their IP address space) at all
-   edges of their network (see RFC 2827 [RFC2827] and RFC 3704 [RFC3704]
-   ).  This protects the TCP session used by Internal BGP (iBGP) from
-   attackers outside the Autonomous System.  Similarly, the
-   considerations for using non globally reachable addresses for links
-   handling BGP sessions from Section 4.1 apply accordingly.
+   edges of their network (see [RFC2827] and [RFC3704] ).  This protects
+   the TCP session used by Internal BGP (iBGP) from attackers outside
+   the Autonomous System.  Similarly, the considerations for using non
+   globally reachable addresses for links handling BGP sessions from
+   Section 4.1 apply accordingly.
 
 5.1.2.  Defending Against PMTUD Related Attacks
 
@@ -410,15 +410,15 @@ Table of Contents
 5.2.  BGP TTL Security (GTSM)
 
    BGP sessions can be made harder to spoof with the Generalized TTL
-   Security Mechanisms (GTSM aka TTL security), defined in RFC 5082
-   [RFC5082].  Instead of sending TCP packets with TTL value of 1, the
-   BGP speakers send the TCP packets with TTL value of 255, and the
-   receiver checks that the TTL value equals 255.  Since it's impossible
-   to send an IP packet with TTL of 255 to an IP host that is not
-   directly connected, BGP TTL security effectively prevents all
-   spoofing attacks coming from third parties not directly connected to
-   the same subnet as the BGP-speaking routers.  Operators SHOULD
-   implement TTL security on directly connected BGP neighbors.
+   Security Mechanisms (GTSM aka TTL security), defined in [RFC5082].
+   Instead of sending TCP packets with TTL value of 1, the BGP speakers
+   send the TCP packets with TTL value of 255, and the receiver checks
+   that the TTL value equals 255.  Since it's impossible to send an IP
+   packet with TTL of 255 to an IP host that is not directly connected,
+   BGP TTL security effectively prevents all spoofing attacks coming
+   from third parties not directly connected to the same subnet as the
+   BGP-speaking routers.  Operators SHOULD implement TTL security on
+   directly connected BGP neighbors.
 
    GTSM could also be applied to multi-hop BGP session as well.  To
    achieve this, TTL needs to be configured with a proper value
@@ -588,14 +588,14 @@ Table of Contents
 
    An Internet Routing Registry (IRR) is a database containing Internet
    routing information, described using Routing Policy Specification
-   Language objects as described in RFC 4012 [RFC4012].  Operators are
-   given privileges to describe routing policies of their own networks
-   in the IRR, and that information is published, usually publicly.  A
-   majority of Regional Internet Registries do also operate an IRR and
-   can control whether registered routes conform to the prefixes that
-   are allocated or directly assigned.  However, it should be noted that
-   the list of such prefixes is not necessarily a complete list, and as
-   such the list of routes in an IRR is not the same as the set of RIR-
+   Language objects as described in [RFC4012].  Operators are given
+   privileges to describe routing policies of their own networks in the
+   IRR, and that information is published, usually publicly.  A majority
+   of Regional Internet Registries do also operate an IRR and can
+   control whether registered routes conform to the prefixes that are
+   allocated or directly assigned.  However, it should be noted that the
+   list of such prefixes is not necessarily a complete list, and as such
+   the list of routes in an IRR is not the same as the set of RIR-
    allocated prefixes.  Furthermore, especially IRRs not operated by
    RIRs regularly list conflicting information, see Section 7.1.
 
@@ -686,28 +686,27 @@ Table of Contents
 
 7.2.  SIDR - Secure Inter-Domain Routing: RPKI and ASPA
 
-   SIDR (Secure Inter-Domain Routing), described in RFC 6480 [RFC6480],
-   has been designed to secure Internet advertisements.  Even though
-   technically incorrect, as it is only the name of an important
-   component, the use of techniques entailed in SIDR is commonly
-   referred to as RPKI (Resource Public Key Infrastructure).
+   SIDR (Secure Inter-Domain Routing), described in [RFC6480], has been
+   designed to secure Internet advertisements.  Even though technically
+   incorrect, as it is only the name of an important component, the use
+   of techniques entailed in SIDR is commonly referred to as RPKI
+   (Resource Public Key Infrastructure).
 
    There are basically two services that SIDR offers:
 
-   *  Origin validation, described in RFC 6811 [RFC6811], seeks to make
-      sure that attributes associated with routes are correct, see
-      Section 7.2.1.  (The major point is the validation of the AS
-      number originating a given route.)  Origin validation is now
-      operational (Internet registries, protocols, implementations on
-      some routers), and in theory it can be implemented knowing that
-      the number of signed resources is still low at the time of writing
-      this document.
+   *  Origin validation, described in [RFC6811], seeks to make sure that
+      attributes associated with routes are correct, see Section 7.2.1.
+      (The major point is the validation of the AS number originating a
+      given route.)  Origin validation is now operational (Internet
+      registries, protocols, implementations on some routers), and in
+      theory it can be implemented knowing that the number of signed
+      resources is still low at the time of writing this document.
 
    *  Path validation provided by BGPsec [RFC7353] seeks to make sure
       that no one announces fake/wrong BGP paths that would attract
-      traffic for a given destination; see RFC 7132 [RFC7132].  Even
-      though the work on BGPsec has been concluded, adoption is still
-      limited.  Instead, the use of ASPA (Autonomous System Provider
+      traffic for a given destination; see [RFC7132].  Even though the
+      work on BGPsec has been concluded, adoption is still limited.
+      Instead, the use of ASPA (Autonomous System Provider
       Authorization) [I-D.ietf-sidrops-aspa-verification] objects, see
       also Section 7.2.2, is likely to be more relevant within the
       context of BGP.  Even though the draft on ASPA has not been
@@ -744,12 +743,14 @@ Table of Contents
    In addition to this, operators SHOULD sign their routing objects so
    their routes can be validated by other networks running origin
    validation.  Please note that, when signing routing objects,
-   operators SHOULD strive to sign exact matches of their intended
-   announcements, see [KIRIN-22].  For example, if an operator received
-   a /29 allocation and intends to announce it in a deaggregation of
-   /32, the corresponding ROA should cover the /29 with a longest
-   allowed prefix of /32, instead of signing for a deaggregation up
-   until /48.
+   operators SHOULD strive to create minimally covering ROAs for their
+   intended announcements, see [RFC7115] and [RFC9319], to reduce the
+   attack surface of attempts to exhaust routers' route processing
+   capacity in terms of memory and CPU [KIRIN-22].  For example, if an
+   operator received a /29 allocation and intends to announce it in a
+   deaggregation of /32, the corresponding ROA should cover the /29 with
+   a longest allowed prefix of /32, instead of signing for a
+   deaggregation up until /48.
 
    One should understand that the RPKI model brings new, interesting
    challenges.  The paper "On the Risk of Misbehaving RPKI Authorities"
@@ -992,11 +993,10 @@ Table of Contents
    more harm than benefit; therefore, in the past, the RIPE community
    has recommended against using BGP route flap dampening [RIPE-378].
    Later, studies were conducted to propose new route flap dampening
-   thresholds in order to make the solution "usable"; see RFC 7196
-   [RFC7196] and [RIPE-580] (in which RIPE reviewed its
-   recommendations).  Following IETF and RIPE recommendations and using
-   BGP route flap dampening with the adjusted configured thresholds is
-   RECOMMENDED.
+   thresholds in order to make the solution "usable"; see [RFC7196] and
+   [RIPE-580] (in which RIPE reviewed its recommendations).  Following
+   IETF and RIPE recommendations and using BGP route flap dampening with
+   the adjusted configured thresholds is RECOMMENDED.
 
 8.2.  Maximum Prefixes
 
@@ -1824,6 +1824,11 @@ Table of Contents
               DOI 10.17487/RFC6811, January 2013,
               <https://www.rfc-editor.org/info/rfc6811>.
 
+   [RFC7115]  Bush, R., "Origin Validation Operation Based on the
+              Resource Public Key Infrastructure (RPKI)", BCP 185,
+              RFC 7115, DOI 10.17487/RFC7115, January 2014,
+              <https://www.rfc-editor.org/info/rfc7115>.
+
    [RFC7196]  Pelsser, C., Bush, R., Patel, K., Mohapatra, P., and O.
               Maennel, "Making Route Flap Damping Usable", RFC 7196,
               DOI 10.17487/RFC7196, May 2014,
@@ -1853,6 +1858,12 @@ Table of Contents
               in UPDATE and OPEN Messages", RFC 9234,
               DOI 10.17487/RFC9234, May 2022,
               <https://www.rfc-editor.org/info/rfc9234>.
+
+   [RFC9319]  Gilad, Y., Goldberg, S., Sriram, K., Snijders, J., and B.
+              Maddison, "The Use of maxLength in the Resource Public Key
+              Infrastructure (RPKI)", BCP 185, RFC 9319,
+              DOI 10.17487/RFC9319, October 2022,
+              <https://www.rfc-editor.org/info/rfc9319>.
 
    [I-D.ietf-sidrops-aspa-verification]
               Azimov, A., Bogomazov, E., Bush, R., Patel, K., Snijders,
@@ -1918,11 +1929,6 @@ Table of Contents
               and Authentication for Routing Protocols (KARP) Design
               Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
               <https://www.rfc-editor.org/info/rfc6952>.
-
-   [RFC7115]  Bush, R., "Origin Validation Operation Based on the
-              Resource Public Key Infrastructure (RPKI)", BCP 185,
-              RFC 7115, DOI 10.17487/RFC7115, January 2014,
-              <https://www.rfc-editor.org/info/rfc7115>.
 
    [RFC7132]  Kent, S. and A. Chi, "Threat Model for BGP Path Security",
               RFC 7132, DOI 10.17487/RFC7132, February 2014,
