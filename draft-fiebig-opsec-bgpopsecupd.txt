@@ -106,7 +106,7 @@ Table of Contents
    8.  Filtering and Cleaning Based on Other BGP Aspects
      8.1.  BGP Route Flap Dampening
      8.2.  Maximum Prefixes
-       8.2.1.  Maximum Prefixes on a Single Peering
+       8.2.1.  Maximum Prefixes on a Single Session
        8.2.2.  Maximum Prefixes per Neighboring AS
      8.3.  AS Path Filtering
      8.4.  Next-Hop Filtering
@@ -141,8 +141,8 @@ Table of Contents
    between network domains.  BGP does not directly include mechanisms
    that control whether the routes exchanged conform to the various
    guidelines defined by the Internet community.  This document intends
-   to both summarize common existing guidelines and help network
-   administrators apply coherent BGP policies.
+   to both summarize common existing guidelines and help operators apply
+   coherent BGP policies.
 
 1.1.  Requirements Language
 
@@ -153,15 +153,15 @@ Table of Contents
 
 2.  Scope of the Document
 
-   The guidelines defined in this document are intended for generic
-   Internet BGP peerings.  The nature of the Internet is such that
-   Autonomous Systems can always agree on exceptions to a common
-   framework for relevant local needs, and therefore configure a BGP
-   session in a manner that may differ from the recommendations provided
-   in this document.  While this is perfectly acceptable, every
-   configured exception might have an impact on the entire inter-domain
-   routing environment, and network administrators SHOULD carefully
-   appraise this impact before implementation.
+   The guidelines defined in this document are intended for BGP sessions
+   carrying generic Internet routing information within the DFZ.  The
+   nature of the Internet is such that Autonomous Systems can always
+   agree on exceptions to a common framework for relevant local needs,
+   and therefore configure a BGP session in a manner that may differ
+   from the recommendations provided in this document.  While this is
+   perfectly acceptable, every configured exception might have an impact
+   on the entire inter-domain routing environment, and operators SHOULD
+   carefully appraise this impact before implementation.
 
 3.  Definitions and Acronyms
 
@@ -173,6 +173,12 @@ Table of Contents
    ASN:
       Autonomous System Number
 
+   DFZ:
+      Default Free Zone
+
+   GRT:
+      Global Routing Table
+
    IRR:
       Internet Routing Registry
 
@@ -182,15 +188,11 @@ Table of Contents
    LIR:
       Local Internet Registry
 
+   OTC:
+      Only To Customer BGP Attribute
+
    PMTUD:
       Path MTU Discovery
-
-   RIR:
-      Regional Internet Registry
-
-   Tier 1 transit provider:
-      an IP transit provider that can reach any network on the Internet
-      without purchasing transit services.
 
    uRPF:
       Unicast Reverse Path Forwarding
@@ -198,24 +200,80 @@ Table of Contents
    In addition to the list above, the following terms are used with a
    specific meaning.
 
+   BGP Speaker:
+      A device exchanging routes with other BGP speakers using the BGP
+      protocol
+
+   BGP Neighbor:
+      Also just 'Neighbor'.  Two BGP speakers that communicate using the
+      BGP protocols are neighbors.
+
+   Cone:
+      The set of ASes who are either direct downstreams of an AS, or in
+      the cone of any of those ASes; Depending on the context this also
+      includes the joint set of prefixes that may be originated by ASes
+      in a cone.
+
    Downstream:
-      any network that is downstream; it can be a provider or a customer
-      network.
+      In a direct relationship between two ASes the one receiving
+      upstream from the other.  (See: [RFC9234], also known as the
+      customer in a customer-provider relationship.)
+
+   Exporting a Prefix:
+      Advertising a prefix to a neighbor.
+
+   Full Table:
+      A routing table containing a route to all prefixes in the GRT but
+      not the default route.
+
+   Importing a Prefix:
+      Accepting a prefix advertised by a neighbor and considering it for
+      route selection and import into the local AS' routing table.
+
+   Originating a Prefix:
+      Advertising a prefix with an empty AS-Path.
+
+   Network edge:
+      Last routers under the control of an operator.
 
    Upstream:
-      any network that is upstream.
+      In a direct relationship between two ASes the one providing
+      upstream to the other.  (See: [RFC9234], also known as the
+      provider in a customer-provider relationship.)
+
+   Operator:
+      Individual, group of people, or organizational unit responsible
+      for operating BGP speakers, i.e., making administrative changes,
+      as well as defining and setting policies for all BGP speakers
+      within an organization.
 
    Peer:
-      any network that is neither upstream or downstream.
+      Two directly connected ASes who only advertise routes they
+      originate or learned from their downstreams to each other.  (See:
+      [RFC9234])
+
+   Mutual Upstream:
+      When two directly connected ASes both advertise a BGP fulltable to
+      each other.  (See: [I-D.ietf-sidrops-aspa-verification])
+
+   Providing Transit:
+      Forwarding packets destined for addresses in an advertised prefix.
+
+   Providing Upstream:
+      Providing transit while advertising a full BGP table or default
+      route to the neighbor.
+
+   Router:
+      In this document, router always refers to a BGP speaker.
 
 4.  Protection of the BGP Speaker
 
    The BGP speaker needs to be protected from external attempts to
    subvert the BGP session.  Furthermore, access to management services
-   of the BGP speaker should be limited to permitted hosts, as these
-   services usually share resources with the control plane and, e.g.,
-   automated attacks on management ports may impact the BGP speaker's
-   ability to execute BGP related tasks.
+   of the BGP speaker should be limited to neighbors, as these services
+   usually share resources with the control plane and, e.g., automated
+   attacks on management ports may impact the BGP speaker's ability to
+   execute BGP related tasks.
 
 4.1.  BGP Network Layer Protection
 
@@ -265,15 +323,15 @@ Table of Contents
 
    Usually, a BGP speaker's management interface is also reachable via
    the default routing domain / VRF (Virtual Routing Fabric) of the
-   control plane.  Hence, if a network administrator or an attacker
-   brings down a router by overloading one of the other protocols
-   remotely, BGP is harmed as well.  To make it easier to separate BGP
-   and management related control plane traffic, management traffic
-   SHOULD be handled via a dedicated routing domain / VRF.  This routing
-   domain / VRF should be protected from unauthorized connections by
-   ACLs not handled on the BGP speaker itself to ensure that the control
-   plane cannot be overloaded by attacks on the management interfaces of
-   the BGP speaker.
+   control plane.  Hence, if an operator or an attacker brings down a
+   router by overloading one of the other protocols remotely, BGP is
+   harmed as well.  To make it easier to separate BGP and management
+   related control plane traffic, management traffic SHOULD be handled
+   via a dedicated routing domain / VRF.  This routing domain / VRF
+   should be protected from unauthorized connections by ACLs not handled
+   on the BGP speaker itself to ensure that the control plane cannot be
+   overloaded by attacks on the management interfaces of the BGP
+   speaker.
 
    In general, filtering and rate-limiting of control-plane traffic is a
    wider topic than "just for BGP".  For further recommendations on how
@@ -289,7 +347,7 @@ Table of Contents
 5.1.  Protection of TCP Sessions Used by BGP
 
    Attacks on TCP sessions used by BGP (aka BGP sessions), for example,
-   sending spoofed TCP RST packets, could bring down a BGP peering.
+   sending spoofed TCP RST packets, could bring down a BGP session.
    Following a successful ARP spoofing attack (or other similar man-in-
    the-middle attack), the attacker might even be able to inject packets
    into the TCP stream (routing attacks).
@@ -308,22 +366,22 @@ Table of Contents
 
    IPsec could also be used for session protection.  At the time of
    publication, there has been no wide-spread adoption of using IPsec
-   for BGP peerings, and further analysis is required to define
+   for BGP sessions, and further analysis is required to define
    guidelines.
 
    The drawback of TCP session protection is additional configuration
    and management overhead for the maintenance of authentication
    information (for example, MD5 passwords).  Protection of TCP sessions
-   used by BGP hence MAY be enabled even when peerings are established
-   over shared networks where spoofing can be done (like IXPs), but
-   operators are RECOMMENDED to consider the trade-offs and to apply TCP
-   session protection where appropriate.
+   used by BGP hence MAY be enabled even when BGP sessions are
+   established over shared networks where spoofing can be done (like
+   IXPs), but operators are RECOMMENDED to consider the trade-offs and
+   to apply TCP session protection where appropriate.
 
-   Furthermore, network administrators SHOULD block spoofed packets
-   (packets with a source IP address belonging to their IP address
-   space) at all edges of their network (see RFC 2827 [RFC2827] and RFC
-   3704 [RFC3704] ).  This protects the TCP session used by Internal BGP
-   (IBGP) from attackers outside the Autonomous System.  Similarly, the
+   Furthermore, operators SHOULD block spoofed packets (packets with a
+   source IP address not belonging to their IP address space) at all
+   edges of their network (see RFC 2827 [RFC2827] and RFC 3704 [RFC3704]
+   ).  This protects the TCP session used by Internal BGP (iBGP) from
+   attackers outside the Autonomous System.  Similarly, the
    considerations for using non globally reachable addresses for links
    handling BGP sessions from Section 4.1 apply accordingly.
 
@@ -338,15 +396,16 @@ Table of Contents
    SHOULD additionally take precautions to defend against these attacks,
    especially if authentication mechanisms are not in use.  To mitigate
    this attack, BGP speakers should not allow packet fragmentation on
-   the control plane for BGP traffic between themselves and their peers.
-   This is feasible, as even on multi hop sessions, the path MTU should
-   be known to the operators, meaning that it can be statically and
-   consistently configured for both speakers involved in a session to
-   prevent the need for fragmentation.  Hence, operators SHOULD ensure
-   that fragmentation is neither allowed nor necessary for BGP packets
-   between two BGP speakers.  If this is not possible, a strict lower
-   limit for the MTU SHOULD be configured.  Given that IPv6 requires an
-   MTU of at least 1280b, this value is the RECOMMENDED minimum.
+   the control plane for BGP traffic between themselves and their
+   neighbors.  This is feasible, as even on multi-hop sessions, the path
+   MTU should be known to the operators, meaning that it can be
+   statically and consistently configured for both speakers involved in
+   a session to prevent the need for fragmentation.  Hence, operators
+   SHOULD ensure that fragmentation is neither allowed nor necessary for
+   BGP packets between two BGP speakers.  If this is not possible, a
+   strict lower limit for the MTU SHOULD be configured.  Given that IPv6
+   requires an MTU of at least 1280b, this value is the RECOMMENDED
+   minimum.
 
 5.2.  BGP TTL Security (GTSM)
 
@@ -358,10 +417,10 @@ Table of Contents
    to send an IP packet with TTL of 255 to an IP host that is not
    directly connected, BGP TTL security effectively prevents all
    spoofing attacks coming from third parties not directly connected to
-   the same subnet as the BGP-speaking routers.  Network administrators
-   SHOULD implement TTL security on directly connected BGP peerings.
+   the same subnet as the BGP-speaking routers.  Operators SHOULD
+   implement TTL security on directly connected BGP neighbors.
 
-   GTSM could also be applied to multi-hop BGP peering as well.  To
+   GTSM could also be applied to multi-hop BGP session as well.  To
    achieve this, TTL needs to be configured with a proper value
    depending on the distance between BGP speakers (using the principle
    described above).  Nevertheless, it is not as effective because
@@ -373,12 +432,13 @@ Table of Contents
 6.  Static Prefix Filtering
 
    The main aspect of securing BGP resides in controlling the prefixes
-   that are received and advertised on the BGP peerings.  Prefixes
-   exchanged between BGP peers are controlled with inbound and outbound
-   filters that can match on well-known/statically typed IP prefixes (as
-   described in this section), a combination of Prefix and AS paths (see
-   ), BGP roles as (see Section 7.5.1), or any other attributes of a BGP
-   prefix (for example, BGP communities, as described in Section 7.5.2).
+   that are received and advertised on the BGP session.  Prefixes
+   exchanged between BGP neighbors are controlled with inbound and
+   outbound filters that can match on well-known/statically typed IP
+   prefixes (as described in this section), a combination of Prefix and
+   AS paths (see ), BGP roles as (see Section 7.5.1), or any other
+   attributes of a BGP prefix (for example, BGP communities, as
+   described in Section 7.5.2).
 
    This section lists the most commonly used static prefix filters.  We
    define static prefixes as prefixes that are published via an
@@ -395,7 +455,7 @@ Table of Contents
    the list of IPv4 special-purpose prefixes and their routing scope,
    and it SHOULD be used for prefix-filter configuration.  Prefixes with
    value "False" in column "Global" SHOULD be discarded on Internet BGP
-   peerings.
+   sessions (eBGP).
 
 6.1.2.  IPv6 Special-Purpose Prefixes
 
@@ -403,7 +463,7 @@ Table of Contents
    the list of IPv6 special-purpose prefixes and their routing scope,
    and it SHOULD be used for prefix-filter configuration.  Only prefixes
    with value "False" in column "Global" SHOULD be discarded on Internet
-   BGP peerings.
+   BGP sessions.
 
 6.2.  Unallocated Prefixes
 
@@ -413,9 +473,9 @@ Table of Contents
    or RIRs, it is important to understand that filtering unallocated
    prefixes requires constant updates, as prefixes are continually
    allocated.  Therefore, automation of such prefix filters is key for
-   the success of this approach.  Network administrators SHOULD NOT
-   consider solutions described in this section if they are not capable
-   of maintaining updated prefix filters: the damage would probably be
+   the success of this approach.  Operators SHOULD NOT consider
+   solutions described in this section if they are not capable of
+   maintaining updated prefix filters: the damage would probably be
    worse than the intended security policy.  In this section we focus on
    IP adress space allocated to RIRs by IANA.  Allocations by RIRs are
    generally more dynamic.  Therefore, we will discuss using RIR level
@@ -424,26 +484,25 @@ Table of Contents
 6.2.1.  IANA-Allocated Prefix Filters
 
    IANA has allocated all the IPv4 available space.  Therefore, there is
-   no reason why network administrators would keep checking that
-   prefixes they receive from BGP peers are in the IANA-allocated IPv4
-   address space [IANAv4Reg].  No specific filters need to be put in
-   place by administrators who want to make sure that IPv4 prefixes they
-   receive in BGP updates have been allocated by IANA.
+   no reason why operators would keep checking that prefixes they
+   receive from BGP neighbors are in the IANA-allocated IPv4 address
+   space [IANAv4Reg].  No specific filters need to be put in place by
+   operators who want to make sure that IPv4 prefixes they receive in
+   BGP updates have been allocated by IANA.
 
    For IPv6, given the size of the address space, it can be seen as wise
    to accept only prefixes derived from those allocated by IANA.
-   Administrators can dynamically build this list from the IANA-
-   allocated IPv6 space [IANAv6Reg].  As IANA keeps allocating prefixes
-   to RIRs, the aforementioned list should be checked regularly against
-   changes, and if they occur, prefix filters should be computed and
-   pushed on network devices.  The list could also be pulled directly by
-   routers when they implement such mechanisms.  As there is delay
-   between the time a RIR receives a new prefix and the moment it starts
-   allocating portions of it to its LIRs, there is no need for doing
-   this step quickly and frequently.  However, network administrators
-   SHOULD ensure that all IPv6 prefix filters are updated within a
-   maximum of one month after any change in the list of IPv6 prefixes
-   allocated by IANA.
+   Operators can dynamically build this list from the IANA- allocated
+   IPv6 space [IANAv6Reg].  As IANA keeps allocating prefixes to RIRs,
+   the aforementioned list should be checked regularly against changes,
+   and if they occur, prefix filters should be computed and pushed on
+   network devices.  The list could also be pulled directly by routers
+   when they implement such mechanisms.  As there is delay between the
+   time an RIR receives a new prefix and the moment it starts allocating
+   portions of it to its LIRs, there is no need for doing this step
+   quickly and frequently.  However, operators SHOULD ensure that all
+   IPv6 prefix filters are updated within a maximum of one month after
+   any change in the list of IPv6 prefixes allocated by IANA.
 
    If the process in place (whether manual or automatic) cannot
    guarantee that the list is updated regularly, then it's better not to
@@ -460,7 +519,7 @@ Table of Contents
    Most ISPs will not accept advertisements beyond a certain level of
    specificity (and in return, they do not announce prefixes they
    consider to be too specific).  That acceptable specificity is decided
-   for each peering between the two BGP peers.  Some ISP communities
+   for each session between two BGP neighbors.  Some ISP communities
    have tried to document acceptable specificity.  This document does
    not make any judgement on what the best approach is, it just notes
    that there are existing practices on the Internet and recommends that
@@ -519,7 +578,7 @@ Table of Contents
 7.1.  Prefix Filters Created from Internet Routing Registries (IRRs)
 
    A more precise check can be performed when one would like to make
-   sure that prefixes they receive are being originated or transited by
+   sure that received prefixes are being originated or transited by
    Autonomous Systems (ASes) entitled to do so.  It has been observed in
    the past that an AS could easily advertise someone else's prefix (or
    more specific prefixes) and create black holes or security threats.
@@ -529,17 +588,16 @@ Table of Contents
 
    An Internet Routing Registry (IRR) is a database containing Internet
    routing information, described using Routing Policy Specification
-   Language objects as described in RFC 4012 [RFC4012].  Network
-   administrators are given privileges to describe routing policies of
-   their own networks in the IRR, and that information is published,
-   usually publicly.  A majority of Regional Internet Registries do also
-   operate an IRR and can control whether registered routes conform to
-   the prefixes that are allocated or directly assigned.  However, it
-   should be noted that the list of such prefixes is not necessarily a
-   complete list, and as such the list of routes in an IRR is not the
-   same as the set of RIR-allocated prefixes.  Furthermore, especially
-   IRRs not operated by RIRs regularly list conflicting information, see
-   Section 7.1.
+   Language objects as described in RFC 4012 [RFC4012].  Operators are
+   given privileges to describe routing policies of their own networks
+   in the IRR, and that information is published, usually publicly.  A
+   majority of Regional Internet Registries do also operate an IRR and
+   can control whether registered routes conform to the prefixes that
+   are allocated or directly assigned.  However, it should be noted that
+   the list of such prefixes is not necessarily a complete list, and as
+   such the list of routes in an IRR is not the same as the set of RIR-
+   allocated prefixes.  Furthermore, especially IRRs not operated by
+   RIRs regularly list conflicting information, see Section 7.1.
 
 7.1.1.  Route Objects
 
@@ -557,18 +615,19 @@ Table of Contents
    An AS-SET is an object that contains AS numbers or other AS-SETs.
    The purpose of AS-SETs is creating a recursively queryable structure
    documenting the cone of an AS.  An operator may create an AS-SET
-   defining all AS numbers of its customers.  A Tier 1 transit provider
-   might create an AS-SET describing the AS-SET of connected operators,
-   which in turn describe the AS numbers of their customers.  Using
-   recursion, it is possible to retrieve from an AS-SET the complete
-   list of AS numbers that the peer is likely to announce.  For each of
-   these AS numbers, it is also easy to look in the corresponding IRR
-   for all associated prefixes.
+   defining all AS numbers of its customers.  A transit provider might
+   create an AS-SET listing the AS numbers or AS-SETS of those ASes it
+   provides upstream to.  In turn, these ASes describe the AS numbers/
+   AS-SETS of their customers, etc.  Using recursion, it is possible to
+   retrieve from an AS-SET the complete list of AS numbers that the
+   neighbor is likely to announce.  For each of these AS numbers, it is
+   also easy to look in the corresponding IRR for all associated
+   prefixes.
 
    Please note that different IRR may provide conflicting data,
    especially on AS-SETs.  Recently, an attack was observed where a
    malicious party created an empty AS-SET for a large transit provider
-   (see [NLNOG-22]).  As it was created in a database often taking
+   (see [NLNOG-22]).  As it was created in an RIR database often taking
    precedent over other IRR sources, several ASes imported this empty
    AS-SET, and hence filtered all prefixes advertised by this transit
    provider.  To mitigate this issue, hierachical AS-SETs reside in the
@@ -583,20 +642,21 @@ Table of Contents
 7.1.3.  Recursively Computing Filters
 
    Using AS-SETs and ROUTE/ROUTE6 objects, it is possible to use the IRR
-   information to build, for a given neighbor AS, a list of originated
-   or transited prefixes that one may accept.  This can be done
+   information to build, for a given neighbor AS, a list of prefixes the
+   neighbor is authorized to originated or transited.  This can be done
    relatively easily using scripts and existing tools capable of
    retrieving this information from the registries.  This approach is
    exactly the same for both IPv4 and IPv6.
 
-   The macro-algorithm for the script is as follows.  For the peer that
-   is considered, the distant network administrator has provided the AS
-   and may be able to provide an hierachically named AS-SET object (aka
-   AS-MACRO).  With these two mechanisms, a script can build, for a
-   given peer, the list of allowed prefixes and the AS number from which
-   they should be originated.  One could decide not use the origin
+   The macro-algorithm for the script is as follows.  For the neighbor
+   that is considered, the distant operator has provided the AS and may
+   be able to provide a hierachically named AS-SET object (aka AS-
+   MACRO).  With these two mechanisms, a script can build, for a given
+   neighbor, that lists allowed prefixes and the AS number from which
+   they should be originated.  One could decide not to use the origin
    information and only build monolithic prefix filters from fetched
-   data.
+   data combining prefixes a neighbor is authorized to transit and
+   originate.
 
    As prefixes, AS numbers, and AS-SETs may not all be under the same
    RIR authority, it is difficult to choose for each object the
@@ -618,11 +678,11 @@ Table of Contents
    emergency and registries may be updated at the very last moment.
    Note that this approach significantly increases the complexity of the
    router configurations, as it can quickly add tens of thousands of
-   configuration lines for some important peers.  To manage this
-   complexity, network administrators could use, for example, IRRToolSet
-   [IRRToolSet], a set of tools making it possible to simplify the
-   creation of automated filter configuration from policies stored in an
-   IRR.
+   configuration lines for some important neighbors, e.g., large peers
+   or downstreams.  To manage this complexity, operators could use, for
+   example, IRRToolSet [IRRToolSet], a set of tools making it possible
+   to simplify the creation of automated filter configuration from
+   policies stored in an IRR.
 
 7.2.  SIDR - Secure Inter-Domain Routing: RPKI and ASPA
 
@@ -660,11 +720,10 @@ Table of Contents
    routing security problems in the long term, but it may take time for
    deployments to be made and objects to become signed.  Also, note that
    the SIDR infrastructure is complementing (not replacing) the security
-   best practices listed in this document.  Therefore, network
-   administrators SHOULD implement any SIDR proposed mechanism (for
-   example, route origin validation) on top of the other existing
-   mechanisms even if they could sometimes appear to be targeting the
-   same goal.
+   best practices listed in this document.  Therefore, operators SHOULD
+   implement any SIDR proposed mechanism (for example, route origin
+   validation) on top of the other existing mechanisms even if they
+   could sometimes appear to be targeting the same goal.
 
 7.2.1.  Route Origin Validation (ROV)
 
@@ -682,9 +741,9 @@ Table of Contents
    *  If a ROA is not found, then the prefix SHOULD be accepted, but the
       corresponding route SHOULD be given a low preference.
 
-   In addition to this, network administrators SHOULD sign their routing
-   objects so their routes can be validated by other networks running
-   origin validation.  Please note that, when signing routing objects,
+   In addition to this, operators SHOULD sign their routing objects so
+   their routes can be validated by other networks running origin
+   validation.  Please note that, when signing routing objects,
    operators SHOULD strive to sign exact matches of their intended
    announcements, see [KIRIN-22].  For example, if an operator received
    a /29 allocation and intends to announce it in a deaggregation of
@@ -705,7 +764,7 @@ Table of Contents
    [I-D.ietf-sidrops-aspa-verification].  In short, each external route
    received on a router SHOULD be checked against the ASPA record found
    in the Resource Public Key Infrastructure (RPKI) based on the
-   relationship to the peer.
+   relationship to the neighbor.
 
    In [I-D.ietf-sidrops-aspa-verification], see following sections based
    on the neighbor relationship:
@@ -730,12 +789,13 @@ Table of Contents
 
 7.3.  Inbound Filtering Prefixes Belonging to the Local AS
 
-   A network SHOULD filter its own prefixes on peerings with all its
-   peers (inbound direction).  This prevents local traffic (from a local
-   source to a local destination) from leaking over an external peering,
-   in case someone else is announcing the prefix over the Internet.
-   This also protects the infrastructure that may directly suffer if the
-   backbone's prefix is suddenly preferred over the Internet.
+   A network SHOULD filter its own prefixes on BGP sessions with all its
+   neighbors (inbound direction).  This prevents local traffic (from a
+   local source to a local destination) from leaking over an external
+   BGP session, in case someone else is announcing the prefix over the
+   Internet.  This also protects the infrastructure that may directly
+   suffer if the backbone's prefix is suddenly preferred over the
+   Internet.
 
    In some cases, for example, multihoming scenarios, such filters
    SHOULD NOT be applied, as this would break the desired redundancy.
@@ -749,14 +809,14 @@ Table of Contents
    downstream.  Downstreams may choose to not advertise prefixes to an
    upstream for a variety of reasons, including traffic engineering and
    Denial-of-Service attack response.  Instead, operators SHOULD assign
-   downstreams' prefixes learned from other peers a lower priority than
-   those routes directly learned from downstreams.  This can be done,
-   e.g., by adding additional path prepends or using local preference
-   settings.  Please note, though, that using local preferences for this
-   purpose may lead to a situation where a downstream is unable to
-   perform traffic engineering apart from withdrawing a route towards
-   its upstream in case of, e.g., a congested link in a multi-homed
-   setup.
+   downstreams' prefixes learned from other neighbors a lower priority
+   than those routes directly learned from downstreams.  This can be
+   done, e.g., by adding additional path prepends or using local
+   preference settings.  Please note, though, that using local
+   preferences for this purpose may lead to a situation where a
+   downstream is unable to perform traffic engineering apart from
+   withdrawing a route towards its upstream in case of, e.g., a
+   congested link in a multi-homed setup.
 
    Even though filtering prefixes belonging to single-homed downstreams
    on sessions with other ASes carries less risk of immediate negative
@@ -826,7 +886,7 @@ Table of Contents
       is not already present.
 
    *  Routes that have the OTC attribute set MUST NOT be exported to
-      Upstreams, Peers, or Routeservers.
+      upstreams, peers, or routeservers.
 
 7.5.2.  Outbound Filtering Using Large-Communities
 
@@ -834,14 +894,15 @@ Table of Contents
    BGP roles, they must be supported by both neighbors in a BGP session
    to be fully effective.  To completely cover an AS, all neighbors
    should utilize BGP roles on their sessions.  Hence, if at least one
-   peer does not yet utilize BGP roles, or if the operator cannot deploy
-   BGP roles and/or use the OTC attribute on their own infrastructure,
-   operators SHOULD additionally utilize BGP large-communities to
-   annotate where they learned prefixes and filter accordingly on
-   sessions where they re-announce these prefixes, see [RFC8195].  While
-   technically possible, standard BGP communities (see [RFC1997]) SHOULD
-   NOT be used for this purpose due to the prevalence of 32bit ASNs
-   which can only be represented in large-communities (see [RFC8092]).
+   neighbor does not yet utilize BGP roles, or if the operator cannot
+   deploy BGP roles and/or use the OTC attribute on their own
+   infrastructure, operators SHOULD additionally utilize BGP large-
+   communities to annotate where they learned prefixes and filter
+   accordingly on sessions where they re-announce these prefixes, see
+   [RFC8195].  While technically possible, standard BGP communities (see
+   [RFC1997]) SHOULD NOT be used for this purpose due to the prevalence
+   of 32bit ASNs which can only be represented in large-communities (see
+   [RFC8092]).
 
    Operators SHOULD designate a large community namespace for each
    neighbor relationship, for example, OPERATOR_ASN:100:NEIGHBOR_ASN for
@@ -870,17 +931,17 @@ Table of Contents
    the initial IXP allocation size for IPv4 (see [RIPE-804]) above their
    own limits on maximum prefix lengths acceptable in the GRT (see
    [RIPE-399] and [RIPE-532]).  When a network is present on an IXP and
-   peers with other IXP members over a common subnet (IXP LAN prefix),
-   it SHOULD NOT accept exact matches or more-specific prefixes for the
-   IXP LAN prefix from any of its external BGP peers.  Accepting these
-   routes may create a black hole for connectivity to the IXP LAN.  To
-   reduce the risk of accidental route leaks of IXP LAN prefixes for
-   which the corresponding IXP opted to not have them in the GRT,
-   operators MAY choose to use "BGP next-hop-self" on all routes learned
-   on that IXP to not be required to distribute the IXP LAN Prefix
-   within their IGP.  Furthermore, IXPs may opt to create ROAs
-   indicating AS0 as the only valid origin AS if they want to prevent
-   their prefixes from being announced on the Internet.
+   has sessions with other IXP members over a common subnet (IXP LAN
+   prefix), it SHOULD NOT accept exact matches or more-specific prefixes
+   for the IXP LAN prefix from any of its external BGP neighbors.
+   Accepting these routes may create a black hole for connectivity to
+   the IXP LAN.  To reduce the risk of accidental route leaks of IXP LAN
+   prefixes for which the corresponding IXP opted to not have them in
+   the GRT, operators MAY choose to use "BGP next-hop-self" on all
+   routes learned on that IXP to not be required to distribute the IXP
+   LAN Prefix within their IGP.  Furthermore, IXPs may opt to create
+   ROAs indicating AS0 as the only valid origin AS if they want to
+   prevent their prefixes from being announced on the Internet.
 
    If the IXP LAN prefix is accepted at all, it SHOULD only be accepted
    from the ASes that the IXP authorizes to announce it -- this will
@@ -951,28 +1012,28 @@ Table of Contents
    accepted to be originated by a neighboring AS across all BGP sessions
    should be limited.
 
-8.2.1.  Maximum Prefixes on a Single Peering
+8.2.1.  Maximum Prefixes on a Single Session
 
    It is RECOMMENDED to configure a limit on the number of routes to be
    accepted from a neighbor.  The following rules are generally
    RECOMMENDED:
 
-   *  From peers, it is RECOMMENDED to have a limit lower than the
-      number of routes in the Internet.  This will shut down the BGP
-      peering if the peer suddenly advertises the full table.  Network
-      administrators can also configure different limits for each peer,
-      according to the number of routes they are supposed to advertise,
-      plus some headroom to permit growth.  However, please note that
-      these limits may change over time.  Hence, it is RECOMMENDED that
-      both neighbors clearly communicate the number of prefixes they
-      expect to announce to each other and agree on a way to
-      automatically update this information in the future.  At the time
-      of writing, ([PeeringDB]) is a common source for programmatically
-      obtaining suggested prefix limits for peers.  In the absence of
-      communicated prefix limits, the number of expected prefixes can be
-      inferred from the AS-SET, see Section 7.1.2.  It is RECOMMENDED to
-      include additional headroom of 20% when utilizing an inferred
-      prefix limit.
+   *  For peers, it is RECOMMENDED to have a limit lower than the number
+      of routes in the Internet.  This will shut down the BGP session if
+      the neighbor suddenly advertises the full table.  Operators can
+      also configure different limits for each neighbor to which they
+      have a peering relationshipt, according to the number of routes
+      they are supposed to advertise, plus some headroom to permit
+      growth.  However, please note that these limits may change over
+      time.  Hence, it is RECOMMENDED that both neighbors clearly
+      communicate the number of prefixes they expect to announce to each
+      other and agree on a way to automatically update this information
+      in the future.  At the time of writing, ([PeeringDB]) is a common
+      source for programmatically obtaining suggested prefix limits for
+      neighbors.  In the absence of communicated prefix limits, the
+      number of expected prefixes can be inferred from the AS-SET, see
+      Section 7.1.2.  It is RECOMMENDED to include additional headroom
+      of 20% when utilizing an inferred prefix limit.
 
    *  From upstreams that provide full routing, it is RECOMMENDED to
       have a limit higher than the number of routes in the Internet.  A
@@ -984,7 +1045,7 @@ Table of Contents
    It is important to regularly review the limits that are configured as
    the Internet can quickly change over time.  Some vendors propose
    mechanisms to have two thresholds: while the higher number specified
-   will shut down the peering, the first threshold will only trigger a
+   will shut down the session, the first threshold will only trigger a
    log and can be used to passively adjust limits based on observations
    made on the network.
 
@@ -1014,57 +1075,55 @@ Table of Contents
    This section lists the RECOMMENDED practices when processing BGP AS
    paths in addition the considerations from Section 7.
 
-   *  Network administrators SHOULD should follow Section 7.1 to only
-      accept 2-byte or 4-byte AS paths from customers containing ASNs
-      belonging to (or authorized to transit through) the customer.  If
-      network administrators cannot build and generate filtering
-      expressions to implement this, they SHOULD consider accepting only
-      path lengths relevant to the type of customer they have (as in, if
-      these customers are a leaf or have customers of their own) and
-      SHOULD try to discourage excessive prepending in such paths.  This
-      loose policy SHOULD be combined with filters for specific 2-byte
-      or 4-byte AS paths that must not be accepted if advertised by the
-      customer, such as upstream transit providers or peer ASNs.
+   *  Operators SHOULD should follow Section 7.1 to only accept 2-byte
+      or 4-byte AS paths from customers containing ASNs belonging to (or
+      authorized to transit through) the customer.  If operators cannot
+      build and generate filtering expressions to implement this, they
+      SHOULD consider accepting only path lengths relevant to the type
+      of customer they have (as in, if these customers are a leaf or
+      have customers of their own) and SHOULD try to discourage
+      excessive prepending in such paths.  This loose policy SHOULD be
+      combined with filters for specific 2-byte or 4-byte AS paths that
+      must not be accepted if advertised by the customer, such as
+      upstream transit providers or peer ASNs.
 
-   *  Network administrators SHOULD NOT accept prefixes with private AS
-      numbers in the AS path unless the prefixes are from customers.  In
-      any case, operators SHOULD NOT re-export prefixes with AS paths
-      containing private AS numbers.  An exception could occur when an
-      upstream is offering some particular service like black-hole
-      origination based on a private AS number: in that case, prefixes
-      SHOULD be accepted.  Customers should be informed by their
-      upstream in order to put in place ad hoc policy to use such
-      services.
+   *  Operators SHOULD NOT accept prefixes with private AS numbers in
+      the AS path unless the prefixes are from customers.  In any case,
+      operators SHOULD NOT re-export prefixes with AS paths containing
+      private AS numbers.  An exception could occur when an upstream is
+      offering some particular service like black-hole origination based
+      on a private AS number: in that case, prefixes SHOULD be accepted.
+      Customers should be informed by their upstream in order to put in
+      place ad hoc policy to use such services.
 
-   *  Network administrators SHOULD NOT accept prefixes when the first
-      AS number in the AS path is not the one of the peer's unless the
-      peering is done toward a BGP route server [RFC7947] (for example,
-      on an IXP) with transparent AS path handling.  In that case, this
+   *  Operators SHOULD NOT accept prefixes when the first AS number in
+      the AS path is not the one of the neighbor unless the BGP session
+      is setup towards a BGP route server [RFC7947] (for example, on an
+      IXP) with transparent AS path handling.  In that case, this
       verification needs to be deactivated, as the first AS number will
-      be the one of an IXP member, whereas the peer AS number will be
-      the one of the BGP route server.
+      be the one of an IXP member, whereas the neighbor's AS number will
+      be the one of the BGP route server.
 
-   *  Network administrators SHOULD NOT advertise prefixes with a
-      nonempty AS path unless they are either announcing prefixes from
-      the GRT to downstreams, or if the whole AS path is within their
-      cone.
+   *  Operators SHOULD NOT advertise prefixes with a nonempty AS path
+      unless they are either announcing prefixes from the GRT to
+      downstreams, or if the whole AS path is within their cone.
 
-   *  Network administrators SHOULD NOT advertise prefixes with upstream
-      AS numbers in the AS path to any AS except to those to which they
-      provide upstream transit.
+   *  Operators SHOULD NOT advertise prefixes with upstream AS numbers
+      in the AS path to any AS except to those to which they provide
+      upstream transit.
 
    *  Private AS numbers are conventionally used in contexts that are
-      "private" and SHOULD NOT be used in advertisements to BGP peers
-      that are not party to such private arrangements, and they SHOULD
-      be stripped when received from BGP peers that are not party to
-      such private arrangements.  Additionally, operators MAY decide to
-      not accept prefixes with private AS numbers in their AS path at
-      all.
+      "private" and SHOULD NOT be used in advertisements to BGP
+      neighbors that are not party to such private arrangements, and
+      they SHOULD be stripped when received from BGP neighbors that are
+      not party to such private arrangements.  Additionally, operators
+      MAY decide to not accept prefixes with private AS numbers in their
+      AS path at all.
 
-   *  Network administrators SHOULD NOT accept their own AS number in
-      the AS path by overriding BGP's default behavior.  When
-      considering an exception, the impact (which may be severe on
-      routing) should be evaluated carefully.
+   *  Operators SHOULD NOT accept their own AS number in the AS path by
+      overriding BGP's default behavior.  When considering an exception,
+      the impact (which may be severe on routing) should be evaluated
+      carefully.
 
    *  Overly long AS path, i.e., longer than 64 entries, may cause
       issues for some older routing hardware.  Hence, operators SHOULD
@@ -1078,17 +1137,18 @@ Table of Contents
    done.  Such an operation is common, and mechanisms exist to allow
    smooth ASN migration [RFC7705].  The usual migration technique, local
    to a router, consists in modifying the AS path so it is presented to
-   a peer with the previous ASN, as if no renumbering was done.  This
-   makes it possible to change the ASN of a router without reconfiguring
-   all EBGP peers at the same time (as that operation would require
-   synchronization with all peers attached to that router).  During this
-   renumbering operation, the rules described above may be adjusted.
+   a neighbor with the previous ASN, as if no renumbering was done.
+   This makes it possible to change the ASN of a router without
+   reconfiguring all eBGP neighbors at the same time (as that operation
+   would require synchronization with all neighbors attached to that
+   router).  During this renumbering operation, the rules described
+   above may be adjusted.
 
 8.4.  Next-Hop Filtering
 
-   If peering on a shared network, like an IXP, BGP can advertise
-   prefixes with a third-party next hop, thus directing packets not to
-   the peer announcing the prefix but somewhere else.
+   When establishing sessions via a shared network, like an IXP, BGP can
+   advertise prefixes with a third-party next hop, thus directing
+   packets not to the neighbor announcing the prefix but somewhere else.
 
    This is a desirable property for BGP route-server setups [RFC7947],
    where the route server will relay routing information but has neither
@@ -1097,33 +1157,34 @@ Table of Contents
    pointing to the router that originally announced the prefix to the
    route server.
 
-   In direct peerings between ISPs, this is undesirable, as one of the
-   peers could trick the other one into sending packets into a black
-   hole (unreachable next hop) or to an unsuspecting third party who
-   would then have to carry the traffic.  Especially for black-holing,
-   the root cause of the problem is hard to see without inspecting BGP
-   prefixes at the receiving router of the IXP.
+   In direct sessions between ASes via an IXP LAN, this is undesirable,
+   as one of the neighbors could trick the other one into sending
+   packets into a black hole (unreachable next hop) or to an
+   unsuspecting third party who would then have to carry the traffic.
+   Especially for black-holing, the root cause of the problem is hard to
+   see without inspecting BGP prefixes at the receiving router of the
+   IXP.
 
    Therefore, an inbound route policy SHOULD be applied on direct
-   peerings via an IXP LAN in order to set the next hop for accepted
-   prefixes to the BGP peer IP address (belonging to the IXP LAN) that
-   sent the prefix (which is what "next-hop-self" would enforce on the
-   sending side).
+   sessions via an IXP LAN in order to set the next hop for accepted
+   prefixes to the BGP neighbor's IP address (belonging to the IXP LAN)
+   that sent the prefix (which is what "next-hop-self" would enforce on
+   the sending side).
 
-   This policy SHOULD NOT be used on route-server peerings or on
-   peerings where network administrators intentionally permit the other
-   side to send third-party next hops.
+   This policy SHOULD NOT be used on sessions with route-servers or on
+   sessions where operators intentionally permit the other side to send
+   third-party next hops.
 
    This policy also SHOULD be adjusted if the best practice of Remote
-   Triggered Black Holing (aka RTBH as described in RFC 6666 [RFC6666] )
-   is implemented.  In that case, network administrators would apply a
-   well-known BGP next hop for routes they want to filter (if an
-   Internet threat is observed from/to this route, for example).  This
-   well-known next hop will be statically routed to a null interface.
-   In combination with a unicast RPF check, this will discard traffic
-   from and toward this prefix.  Peers can exchange information about
-   black holes using, for example, particular BGP communities.  Network
-   administrators could propagate black-hole information to their peers
+   Triggered Black Holing (aka RTBH as described in [RFC6666]) is
+   implemented.  In that case, operators would apply a well-known BGP
+   next hop for routes they want to filter (if an Internet threat is
+   observed from/to this route, for example).  This well-known next hop
+   will be statically routed to a null interface.  In combination with a
+   unicast RPF check, this will discard traffic from and toward this
+   prefix.  BGP speakers can exchange information about black holes
+   using, for example, particular BGP communities, see [RFC6666].
+   Operators could propagate black-hole information to their neighbors
    using an agreed-upon BGP community: when receiving a route with that
    community, a configured policy could change the next hop in order to
    create the black hole.
@@ -1132,24 +1193,23 @@ Table of Contents
 
    Optionally, we can consider the following rules on received NLRI:
 
-   *  Network administrators SHOULD scrub inbound communities with their
-      number in the high-order bits, unless they have been documented
-      and communicated to customers/peers to be used as a signaling
-      mechanism.  Network administrators SHOULD scrub inbound large-
-      communities with their number in the high-order bits, unless they
-      have been documented and communicated to customers/peers to be
-      used as a signaling mechanism.
+   *  Operators SHOULD scrub inbound communities with their ASN in the
+      high-order bits, unless they have been documented and communicated
+      to neighbors to be used as a signaling mechanism.  Operators
+      SHOULD scrub inbound large-communities with their ASN in the high-
+      order bits, unless they have been documented and communicated to
+      neighbors to be used as a signaling mechanism.
 
    *  Networks administrators SHOULD NOT remove other communities
       applied on received routes (communities not removed after
       application of the previous statement).  In particular, they
       SHOULD keep original communities when they apply a community.
       Customers might need them to communicate with upstream providers.
-      In particular, network administrators SHOULD NOT (generally)
-      remove the no-export community, as it is usually announced by
-      their peer for a certain purpose.  Similarly, network operators
-      should not remove RTBH related communities if send by the customer
-      for a prefix of routable size.
+      In particular, operators SHOULD NOT (generally) remove the no-
+      export community, as it is usually announced by their neighbor for
+      a certain purpose.  Similarly, network operators should not remove
+      RTBH related communities if send by the customer for a prefix of
+      routable size.
 
 8.6.  BGP Attribute Scrubbing
 
@@ -1176,13 +1236,13 @@ Table of Contents
    computation to NLRI that will subsequently be discarded.
 
    Below, you can find an (incomplete) example for a simple inbound
-   filter for a peering with a neighbor who has 60 prefixes in its cone
-   creating additional load.  We assume that, accidentally, an IPv4
-   fulltable of 1,000,000 entries is being sent.  2,500 NLRI contain
-   unregistered/private AS numbers, 500 NLRI relate to bogon prefixes,
-   and 5,000 NLRI are RPKI invalid, with none of the routes in the
-   peer's cone falling in any of these categories.  The number of
-   operations per line are given in parentheses.
+   filter for a session with a neighbor in a peer relationship who has
+   60 prefixes in its cone creating additional load.  We assume that,
+   accidentally, an IPv4 fulltable of 1,000,000 entries is being sent.
+   2,500 NLRI contain unregistered/private AS numbers, 500 NLRI relate
+   to bogon prefixes, and 5,000 NLRI are RPKI invalid, with none of the
+   routes in the neigbor's cone falling in any of these categories.  The
+   number of operations per line are given in parentheses.
 
    *  1.  Add community imported from peer (1,000,000)
 
@@ -1194,7 +1254,7 @@ Table of Contents
 
    *  5.  Reject RPKI invalid NLRI (997,000)
 
-   *  6.  Accept only prefixes in the peer's cone (992,000)
+   *  6.  Accept only prefixes in the neighbor's cone (992,000)
 
    In this list, rules 1-5 will be executed for most NLRI seen from the
    neighbor.  In total, 5,986,500 operations are executed on the
@@ -1215,7 +1275,7 @@ Table of Contents
    example above, this would mean, again noting the number of operations
    per rule:
 
-   *  1.  Reject prefixes not in the peer's cone (1,000,000)
+   *  1.  Reject prefixes not in the neighbor's cone (1,000,000)
 
    *  2.  Reject bogon prefixes (60)
 
@@ -1316,15 +1376,16 @@ Table of Contents
 
    Before applying a generated ruleset, an operator should check it for
    obvious errors and potentially require manual intervention to
-   remediate the issue.  Examples include a ruleset for a peer suddenly
-   significantly increasing or decreasing in size, or being empty.
+   remediate the issue.  Examples include a ruleset for a neighbor
+   suddenly significantly increasing or decreasing in size, or being
+   empty.
 
    In case of such a failure, each administrator MAY decide which
    actions they will take.  Options include re-using the previously
    active rule set, or either accepting or rejecting all routes
    depending on routing policy.  Generally accepting all routes during
    that time frame could break BGP routing security.  However, rejecting
-   them might re-route too much traffic on transit peers, and could
+   them might re-route too much traffic towards upstreams, and could
    cause more harm than accepting invalid prefixes.  Similarly, reusing
    the previously active rule set may lead to prefixes being wrongfully
    accepted or rejected, despite on a smaller scale than for a general
@@ -1342,10 +1403,10 @@ Table of Contents
    be applied on each BGP neighbor for received and advertised routes.
    It is RECOMMENDED that each Autonomous System configures rules for
    advertised and received routes at all its borders, as this will
-   protect the network and its peer even in case of misconfiguration.
-   The most commonly used filtering policy is proposed in this section
-   and uses prefix filters defined in Section 6, Section 7, and
-   Section 8.
+   protect the network and its neighbors even in case of
+   misconfiguration.  The most commonly used filtering policy is
+   proposed in this section and uses prefix filters defined in
+   Section 6, Section 7, and Section 8.
 
 9.2.1.  Filters with Internet Peers
 
@@ -1366,7 +1427,7 @@ Table of Contents
    check the impact on the filter and make sure no prefixes are filtered
    that should actually be accepted.
 
-   *  1.  All prefixes not in the peer's cone based on IRR data
+   *  1.  All prefixes not in the neighbor's cone based on IRR data
       (Section 7.1)
 
    *  2.  Prefixes not allocated by IANA (IPv6 only) (Section 6.2.1)
@@ -1402,7 +1463,7 @@ Table of Contents
    between a /16 and a /48 for IPv6.
 
    Additionally, Rule 11 MUST NOT be set for sessions with IXP
-   routeservers, while it SHOULD be set on direct peerings via IXP LANs
+   routeservers, while it SHOULD be set on direct sessions via IXP LANs
    (see Section 7.6).
 
    If BGP roles are used, the OTC attribute should be set according to
@@ -1457,7 +1518,7 @@ Table of Contents
 
    Note that Rule 12 is technically not necessary for eBGP.  However, in
    some rare cases misconfigurations or implementation errors may occur,
-   especially when peering with a neighbor via an IXP LAN (directly or
+   especially for sessions with a neighbor via an IXP LAN (directly or
    indirectly), where the implementation on the BGP speaker might export
    routes with a non-local next-hop.  While Rule 12 could prevent
    disturbance in such cases, the likelihood of such events is
@@ -1476,7 +1537,7 @@ Table of Contents
    then not ingested by the upstream's neighbors.  Applying filtering
    close to the source ensures better debugability for such issues.
 
-   *  1.  All prefixes not in the customer's cone based on IRR data
+   *  1.  All prefixes not in the neighbor's cone based on IRR data
       (Section 7.1)
 
    *  2.  Prefixes not allocated by IANA (IPv6 only) (Section 6.2.1)
@@ -1527,7 +1588,7 @@ Table of Contents
 
    In case the customer wants to receive the full routing table (if it
    is multihomed or if it wants to have a view of the Internet table),
-   the following filters SHOULD be applied on the BGP peering:
+   the following filters SHOULD be applied on the BGP session:
 
    *  1.  Prefixes not allocated by IANA (IPv6 only) (Section 6.2.1)
 
@@ -1555,12 +1616,12 @@ Table of Contents
    In some cases, the customer may desire to receive the default route
    in addition to the full BGP table.  This can be done by the provider
    removing the filter for the default route in Rule 7.  As the default
-   route may not be present in the routing table, network administrators
-   SHOULD only originate it for neighbors that requested it.
+   route may not be present in the routing table, operators SHOULD only
+   originate it for neighbors that requested it.
 
    Note that Rule 9 is technically not necessary for eBGP.  However, in
    some rare cases misconfigurations or implementation errors may occur,
-   especially when peering with a neighbor via an IXP LAN (directly or
+   especially on sessions with a neighbor via an IXP LAN (directly or
    indirectly), where the implementation on the BGP speaker might export
    routes with a non-local next-hop.  While Rule 9 could prevent
    disturbance in such cases, the likelihood of such events is

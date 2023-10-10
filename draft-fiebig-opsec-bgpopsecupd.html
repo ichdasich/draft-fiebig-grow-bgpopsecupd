@@ -23,16 +23,16 @@
 <!-- Generator version information:
   xml2rfc 3.18.1
     Python 3.11.5
-    ConfigArgParse 1.7
+    ConfigArgParse 1.5.3
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
     platformdirs 3.11.0
     pycountry 22.3.5
-    PyYAML 6.0.1
+    PyYAML 6.0
     requests 2.31.0
-    setuptools 68.2.2
+    setuptools 67.7.2
     six 1.16.0
     wcwidth 0.2.8
 -->
@@ -1284,7 +1284,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-maximum-prefixes" class="internal xref">Maximum Prefixes</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.1">
-                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#section-8.2.1" class="auto internal xref">8.2.1</a>.  <a href="#name-maximum-prefixes-on-a-singl" class="internal xref">Maximum Prefixes on a Single Peering</a></p>
+                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#section-8.2.1" class="auto internal xref">8.2.1</a>.  <a href="#name-maximum-prefixes-on-a-singl" class="internal xref">Maximum Prefixes on a Single Session</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.2">
                     <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#section-8.2.2" class="auto internal xref">8.2.2</a>.  <a href="#name-maximum-prefixes-per-neighb" class="internal xref">Maximum Prefixes per Neighboring AS</a></p>
@@ -1390,7 +1390,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">
                 The Border Gateway Protocol (BGP), specified in RFC 4271 <span>[<a href="#RFC4271" class="cite xref">RFC4271</a>]</span>, is the protocol used in the Internet to exchange routing information between network domains.
                 BGP does not directly include mechanisms that control whether the routes exchanged conform to the various guidelines defined by the Internet community.
-                This document intends to both summarize common existing guidelines and help network administrators apply coherent BGP policies.<a href="#section-1-1" class="pilcrow">¶</a></p>
+                This document intends to both summarize common existing guidelines and help operators apply coherent BGP policies.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <div id="sec-requirements-language">
 <section id="section-1.1">
         <h3 id="name-requirements-language">
@@ -1411,9 +1411,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-scope-of-the-document" class="section-name selfRef">Scope of the Document</a>
       </h2>
 <p id="section-2-1">
-                The guidelines defined in this document are intended for generic Internet BGP peerings.
+                The guidelines defined in this document are intended for BGP sessions carrying generic Internet routing information within the DFZ.
                 The nature of the Internet is such that Autonomous Systems can always agree on exceptions to a common framework for relevant local needs, and therefore configure a BGP session in a manner that may differ from the recommendations provided in this document.
-                While this is perfectly acceptable, every configured exception might have an impact on the entire inter-domain routing environment, and network administrators <span class="bcp14">SHOULD</span> carefully appraise this impact before implementation.<a href="#section-2-1" class="pilcrow">¶</a></p>
+                While this is perfectly acceptable, every configured exception might have an impact on the entire inter-domain routing environment, and operators <span class="bcp14">SHOULD</span> carefully appraise this impact before implementation.<a href="#section-2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-definitions-and-acronyms">
@@ -1432,48 +1432,104 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <dd style="margin-left: 1.5em" id="section-3-2.4">Autonomous System Number<a href="#section-3-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.5">IRR:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.6">Internet Routing Registry<a href="#section-3-2.6" class="pilcrow">¶</a>
+<dt id="section-3-2.5">DFZ:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.6">Default Free Zone<a href="#section-3-2.6" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.7">IXP:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.8">Internet Exchange Point<a href="#section-3-2.8" class="pilcrow">¶</a>
+<dt id="section-3-2.7">GRT:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.8">Global Routing Table<a href="#section-3-2.8" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.9">LIR:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.10">Local Internet Registry<a href="#section-3-2.10" class="pilcrow">¶</a>
+<dt id="section-3-2.9">IRR:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.10">Internet Routing Registry<a href="#section-3-2.10" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.11">PMTUD:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.12">Path MTU Discovery<a href="#section-3-2.12" class="pilcrow">¶</a>
+<dt id="section-3-2.11">IXP:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.12">Internet Exchange Point<a href="#section-3-2.12" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.13">RIR:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.14">Regional Internet Registry<a href="#section-3-2.14" class="pilcrow">¶</a>
+<dt id="section-3-2.13">LIR:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.14">Local Internet Registry<a href="#section-3-2.14" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.15">Tier 1 transit provider:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.16">an IP transit provider that can reach any network on the Internet without purchasing transit services.<a href="#section-3-2.16" class="pilcrow">¶</a>
+<dt id="section-3-2.15">OTC:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.16">Only To Customer BGP Attribute<a href="#section-3-2.16" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-2.17">uRPF:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-2.18">Unicast Reverse Path Forwarding<a href="#section-3-2.18" class="pilcrow">¶</a>
+<dt id="section-3-2.17">PMTUD:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.18">Path MTU Discovery<a href="#section-3-2.18" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-2.19">uRPF:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-2.20">Unicast Reverse Path Forwarding<a href="#section-3-2.20" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
 <p id="section-3-3">
                 In addition to the list above, the following terms are used with a specific meaning.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlNewline" id="section-3-4">
-        <dt id="section-3-4.1">Downstream:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.2">any network that is downstream; it can be a provider or a customer network.<a href="#section-3-4.2" class="pilcrow">¶</a>
+        <dt id="section-3-4.1">BGP Speaker:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.2">A device exchanging routes with other BGP speakers using the BGP protocol<a href="#section-3-4.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-4.3">Upstream:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.4">any network that is upstream.<a href="#section-3-4.4" class="pilcrow">¶</a>
+<dt id="section-3-4.3">BGP Neighbor:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.4">Also just 'Neighbor'. Two BGP speakers that communicate using the BGP protocols are neighbors.<a href="#section-3-4.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-3-4.5">Peer:</dt>
-        <dd style="margin-left: 1.5em" id="section-3-4.6">any network that is neither upstream or downstream.<a href="#section-3-4.6" class="pilcrow">¶</a>
+<dt id="section-3-4.5">Cone:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.6">The set of ASes who are either direct downstreams of an AS, or in the cone of any of those ASes; Depending on the context this also includes the joint set of prefixes that may be originated by ASes in a cone.<a href="#section-3-4.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.7">Downstream:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.8">In a direct relationship between two ASes the one receiving upstream from the other. (See: <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>, also known as the customer in a customer-provider relationship.)<a href="#section-3-4.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.9">Exporting a Prefix:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.10">Advertising a prefix to a neighbor.<a href="#section-3-4.10" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.11">Full Table:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.12">A routing table containing a route to all prefixes in the GRT but not the default route.<a href="#section-3-4.12" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.13">Importing a Prefix:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.14">Accepting a prefix advertised by a neighbor and considering it for route selection and import into the local AS' routing table.<a href="#section-3-4.14" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.15">Originating a Prefix:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.16">Advertising a prefix with an empty AS-Path.<a href="#section-3-4.16" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.17">Network edge:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.18">Last routers under the control of an operator.<a href="#section-3-4.18" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.19">Upstream:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.20">In a direct relationship between two ASes the one providing upstream to the other. (See: <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>, also known as the provider in a customer-provider relationship.)<a href="#section-3-4.20" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.21">Operator:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.22">Individual, group of people, or organizational unit responsible for operating BGP speakers, i.e., making administrative changes, as well as defining and setting policies for all BGP speakers within an organization.<a href="#section-3-4.22" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.23">Peer:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.24">Two directly connected ASes who only advertise routes they originate or learned from their downstreams to each other. (See: <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>)<a href="#section-3-4.24" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.25">Mutual Upstream:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.26">When two directly connected ASes both advertise a BGP fulltable to each other. (See: <span>[<a href="#I-D.ietf-sidrops-aspa-verification" class="cite xref">I-D.ietf-sidrops-aspa-verification</a>]</span>)<a href="#section-3-4.26" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.27">Providing Transit:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.28">Forwarding packets destined for addresses in an advertised prefix.<a href="#section-3-4.28" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.29">Providing Upstream:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.30">Providing transit while advertising a full BGP table or default route to the neighbor.<a href="#section-3-4.30" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.31">Router:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.32">In this document, router always refers to a BGP speaker.<a href="#section-3-4.32" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1486,7 +1542,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-4-1">
                 The BGP speaker needs to be protected from external attempts to subvert the BGP session.
-                Furthermore, access to management services of the BGP speaker should be limited to permitted hosts, as these services usually share resources with the control plane and, e.g., automated attacks on management ports may impact the BGP speaker's ability to execute BGP related tasks.<a href="#section-4-1" class="pilcrow">¶</a></p>
+                Furthermore, access to management services of the BGP speaker should be limited to neighbors, as these services usually share resources with the control plane and, e.g., automated attacks on management ports may impact the BGP speaker's ability to execute BGP related tasks.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="sec-protection-of-the-bgp-speaker-net">
 <section id="section-4.1">
         <h3 id="name-bgp-network-layer-protectio">
@@ -1521,7 +1577,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h3>
 <p id="section-4.2-1">
                     Usually, a BGP speaker's management interface is also reachable via the default routing domain / VRF (Virtual Routing Fabric) of the control plane.
-                    Hence, if a network administrator or an attacker brings down a router by overloading one of the other protocols remotely, BGP is harmed as well.
+                    Hence, if an operator or an attacker brings down a router by overloading one of the other protocols remotely, BGP is harmed as well.
                     To make it easier to separate BGP and management related control plane traffic, management traffic <span class="bcp14">SHOULD</span> be handled via a dedicated routing domain / VRF.
                     This routing domain / VRF should be protected from unauthorized connections by ACLs not handled on the BGP speaker itself to ensure that the control plane cannot be overloaded by attacks on the management interfaces of the BGP speaker.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">
@@ -1545,7 +1601,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-protection-of-tcp-sessions-" class="section-name selfRef">Protection of TCP Sessions Used by BGP</a>
         </h3>
 <p id="section-5.1-1">
-                    Attacks on TCP sessions used by BGP (aka BGP sessions), for example, sending spoofed TCP RST packets, could bring down a BGP peering.
+                    Attacks on TCP sessions used by BGP (aka BGP sessions), for example, sending spoofed TCP RST packets, could bring down a BGP session.
                     Following a successful ARP spoofing attack (or other similar man-in- the-middle attack), the attacker might even be able to inject packets into the TCP stream (routing attacks).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">
                     BGP sessions can be secured with a variety of mechanisms.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
@@ -1560,13 +1616,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         While MD5 is still the most used mechanism due to its availability in vendors' equipment, TCP-AO <span class="bcp14">SHOULD</span> be preferred when implemented by both sides of a session.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-2">
                         IPsec could also be used for session protection.
-                        At the time of publication, there has been no wide-spread adoption of using IPsec for BGP peerings, and further analysis is required to define guidelines.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
+                        At the time of publication, there has been no wide-spread adoption of using IPsec for BGP sessions, and further analysis is required to define guidelines.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-3">
                         The drawback of TCP session protection is additional configuration and management overhead for the maintenance of authentication information (for example, MD5 passwords).
-                        Protection of TCP sessions used by BGP hence <span class="bcp14">MAY</span> be enabled even when peerings are established over shared networks where spoofing can be done (like IXPs), but operators are <span class="bcp14">RECOMMENDED</span> to consider the trade-offs and to apply TCP session protection where appropriate.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
+                        Protection of TCP sessions used by BGP hence <span class="bcp14">MAY</span> be enabled even when BGP sessions are established over shared networks where spoofing can be done (like IXPs), but operators are <span class="bcp14">RECOMMENDED</span> to consider the trade-offs and to apply TCP session protection where appropriate.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-4">
-                        Furthermore, network administrators <span class="bcp14">SHOULD</span> block spoofed packets (packets with a source IP address belonging to their IP address space) at all edges of their network (see RFC 2827 <span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>  and RFC 3704 <span>[<a href="#RFC3704" class="cite xref">RFC3704</a>]</span> ).
-                        This protects the TCP session used by Internal BGP (IBGP) from attackers outside the Autonomous System.
+                        Furthermore, operators <span class="bcp14">SHOULD</span> block spoofed packets (packets with a source IP address not belonging to their IP address space) at all edges of their network (see RFC 2827 <span>[<a href="#RFC2827" class="cite xref">RFC2827</a>]</span>  and RFC 3704 <span>[<a href="#RFC3704" class="cite xref">RFC3704</a>]</span> ).
+                        This protects the TCP session used by Internal BGP (iBGP) from attackers outside the Autonomous System.
                         Similarly, the considerations for using non globally reachable addresses for links handling BGP sessions from <a href="#sec-protection-of-the-bgp-speaker-net" class="auto internal xref">Section 4.1</a> apply accordingly.<a href="#section-5.1.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1579,8 +1635,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         In 2018 an attack on BGP was described in the literature which claims to enable BGP route injection without Layer 2 adjacency by leveraging PMTUD, see (<span>[<a href="#FENG-22" class="cite xref">FENG-22</a>]</span>).
                         The attack leverages packet fragmentation to bypass standard TCP protection mechanisms, so routes can be injected into an established BGP session.
                         While the attack would be mitigated by the integrity mechanisms suggested in <a href="#sec-protection-of-tcp-sessions-used-by-bgp-integrity" class="auto internal xref">Section 5.1.1</a>, operators <span class="bcp14">SHOULD</span> additionally take precautions to defend against these attacks, especially if authentication mechanisms are not in use.
-                        To mitigate this attack, BGP speakers should not allow packet fragmentation on the control plane for BGP traffic between themselves and their peers.
-                        This is feasible, as even on multi hop sessions, the path MTU should be known to the operators, meaning that it can be statically and consistently configured for both speakers involved in a session to prevent the need for fragmentation.
+                        To mitigate this attack, BGP speakers should not allow packet fragmentation on the control plane for BGP traffic between themselves and their neighbors.
+                        This is feasible, as even on multi-hop sessions, the path MTU should be known to the operators, meaning that it can be statically and consistently configured for both speakers involved in a session to prevent the need for fragmentation.
                         Hence, operators <span class="bcp14">SHOULD</span> ensure that fragmentation is neither allowed nor necessary for BGP packets between two BGP speakers.
                         If this is not possible, a strict lower limit for the MTU <span class="bcp14">SHOULD</span> be configured.
                         Given that IPv6 requires an MTU of at least 1280b, this value is the <span class="bcp14">RECOMMENDED</span> minimum.<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
@@ -1597,9 +1653,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     BGP sessions can be made harder to spoof with the Generalized TTL Security Mechanisms (GTSM aka TTL security), defined in RFC 5082 <span>[<a href="#RFC5082" class="cite xref">RFC5082</a>]</span>.
                     Instead of sending TCP packets with TTL value of 1, the BGP speakers send the TCP packets with TTL value of 255, and the receiver checks that the TTL value equals 255.
                     Since it's impossible to send an IP packet with TTL of 255 to an IP host that is not directly connected, BGP TTL security effectively prevents all spoofing attacks coming from third parties not directly connected to the same subnet as the BGP-speaking routers.
-                    Network administrators <span class="bcp14">SHOULD</span> implement TTL security on directly connected BGP peerings.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+                    Operators <span class="bcp14">SHOULD</span> implement TTL security on directly connected BGP neighbors.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2-2">
-                    GTSM could also be applied to multi-hop BGP peering as well.
+                    GTSM could also be applied to multi-hop BGP session as well.
                     To achieve this, TTL needs to be configured with a proper value depending on the distance between BGP speakers (using the principle described above).
                     Nevertheless, it is not as effective because anyone inside the TTL diameter could spoof the TTL.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.2-3">
@@ -1614,8 +1670,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-static-prefix-filtering" class="section-name selfRef">Static Prefix Filtering</a>
       </h2>
 <p id="section-6-1">
-                The main aspect of securing BGP resides in controlling the prefixes that are received and advertised on the BGP peerings.
-                Prefixes exchanged between BGP peers are controlled with inbound and outbound filters that can match on well-known/statically typed IP prefixes (as described in this section), a combination of Prefix and AS paths (see ), BGP roles as (see <a href="#sec-filtering-outbound-prefixes-roles" class="auto internal xref">Section 7.5.1</a>), or any other attributes of a BGP prefix (for example, BGP communities, as described in <a href="#sec-filtering-outbound-prefixes-communities" class="auto internal xref">Section 7.5.2</a>).<a href="#section-6-1" class="pilcrow">¶</a></p>
+                The main aspect of securing BGP resides in controlling the prefixes that are received and advertised on the BGP session.
+                Prefixes exchanged between BGP neighbors are controlled with inbound and outbound filters that can match on well-known/statically typed IP prefixes (as described in this section), a combination of Prefix and AS paths (see ), BGP roles as (see <a href="#sec-filtering-outbound-prefixes-roles" class="auto internal xref">Section 7.5.1</a>), or any other attributes of a BGP prefix (for example, BGP communities, as described in <a href="#sec-filtering-outbound-prefixes-communities" class="auto internal xref">Section 7.5.2</a>).<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">
                 This section lists the most commonly used static prefix filters.
                 We define static prefixes as prefixes that are published via an authoritative list which changes, on average, not more frequently than every 12 months.
@@ -1632,7 +1688,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </h4>
 <p id="section-6.1.1-1">
                         The IANA IPv4 Special-Purpose Address Registry <span>[<a href="#IANAv4Spec" class="cite xref">IANAv4Spec</a>]</span>  maintains the list of IPv4 special-purpose prefixes and their routing scope, and it <span class="bcp14">SHOULD</span> be used for prefix-filter configuration.
-                        Prefixes with value "False" in column "Global" <span class="bcp14">SHOULD</span> be discarded on Internet BGP peerings.<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+                        Prefixes with value "False" in column "Global" <span class="bcp14">SHOULD</span> be discarded on Internet BGP sessions (eBGP).<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-ipv6-special-purpose-prefixes">
@@ -1642,7 +1698,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </h4>
 <p id="section-6.1.2-1">
                         The IANA IPv6 Special-Purpose Address Registry <span>[<a href="#IANAv6Spec" class="cite xref">IANAv6Spec</a>]</span>  maintains the list of IPv6 special-purpose prefixes and their routing scope, and it <span class="bcp14">SHOULD</span> be used for prefix-filter configuration.
-                        Only prefixes with value "False" in column "Global" <span class="bcp14">SHOULD</span> be discarded on Internet BGP peerings.<a href="#section-6.1.2-1" class="pilcrow">¶</a></p>
+                        Only prefixes with value "False" in column "Global" <span class="bcp14">SHOULD</span> be discarded on Internet BGP sessions.<a href="#section-6.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1656,7 +1712,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     IANA allocates prefixes to RIRs that in turn allocate prefixes to LIRs (Local Internet Registries).
                     While it is in general sensible to not accept routing table prefixes that are not allocated by IANA and/or RIRs, it is important to understand that filtering unallocated prefixes requires constant updates, as prefixes are continually allocated.
                     Therefore, automation of such prefix filters is key for the success of this approach.
-                    Network administrators <span class="bcp14">SHOULD NOT</span> consider solutions described in this section if they are not capable of maintaining updated prefix filters: the damage would probably be worse than the intended security policy.
+                    Operators <span class="bcp14">SHOULD NOT</span> consider solutions described in this section if they are not capable of maintaining updated prefix filters: the damage would probably be worse than the intended security policy.
                     In this section we focus on IP adress space allocated to RIRs by IANA.
                     Allocations by RIRs are generally more dynamic.
                     Therefore, we will discuss using RIR level data in <a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
@@ -1667,15 +1723,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </h4>
 <p id="section-6.2.1-1">
                         IANA has allocated all the IPv4 available space.
-                        Therefore, there is no reason why network administrators would keep checking that prefixes they receive from BGP peers are in the IANA-allocated IPv4 address space <span>[<a href="#IANAv4Reg" class="cite xref">IANAv4Reg</a>]</span>.
-                        No specific filters need to be put in place by administrators who want to make sure that IPv4 prefixes they receive in BGP updates have been allocated by IANA.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
+                        Therefore, there is no reason why operators would keep checking that prefixes they receive from BGP neighbors are in the IANA-allocated IPv4 address space <span>[<a href="#IANAv4Reg" class="cite xref">IANAv4Reg</a>]</span>.
+                        No specific filters need to be put in place by operators who want to make sure that IPv4 prefixes they receive in BGP updates have been allocated by IANA.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.2.1-2">
                         For IPv6, given the size of the address space, it can be seen as wise to accept only prefixes derived from those allocated by IANA.
-                        Administrators can dynamically build this list from the IANA- allocated IPv6 space <span>[<a href="#IANAv6Reg" class="cite xref">IANAv6Reg</a>]</span>.
+                        Operators can dynamically build this list from the IANA- allocated IPv6 space <span>[<a href="#IANAv6Reg" class="cite xref">IANAv6Reg</a>]</span>.
                         As IANA keeps allocating prefixes to RIRs, the aforementioned list should be checked regularly against changes, and if they occur, prefix filters should be computed and pushed on network devices.
                         The list could also be pulled directly by routers when they implement such mechanisms.
-                        As there is delay between the time a RIR receives a new prefix and the moment it starts allocating portions of it to its LIRs, there is no need for doing this step quickly and frequently.
-                        However, network administrators <span class="bcp14">SHOULD</span> ensure that all IPv6 prefix filters are updated within a maximum of one month after any change in the list of IPv6 prefixes allocated by IANA.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+                        As there is delay between the time an RIR receives a new prefix and the moment it starts allocating portions of it to its LIRs, there is no need for doing this step quickly and frequently.
+                        However, operators <span class="bcp14">SHOULD</span> ensure that all IPv6 prefix filters are updated within a maximum of one month after any change in the list of IPv6 prefixes allocated by IANA.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.2.1-3">
                         If the process in place (whether manual or automatic) cannot guarantee that the list is updated regularly, then it's better not to configure any filters based on allocated networks.
                         The IPv4 experience has shown that many network operators implemented filters for prefixes not allocated by IANA but did not update them on a regular basis.
@@ -1692,7 +1748,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h3>
 <p id="section-6.3-1">
                     Most ISPs will not accept advertisements beyond a certain level of specificity (and in return, they do not announce prefixes they consider to be too specific).
-                    That acceptable specificity is decided for each peering between the two BGP peers.
+                    That acceptable specificity is decided for each session between two BGP neighbors.
                     Some ISP communities have tried to document acceptable specificity.
                     This document does not make any judgement on what the best approach is, it just notes that there are existing practices on the Internet and recommends that the reader refer to them.
                     As an example, the RIPE community has documented that, at the time of writing of this document, IPv4 prefixes longer than /24 and IPv6 prefixes longer than /48 are generally neither announced nor accepted in the Internet <span>[<a href="#RIPE-399" class="cite xref">RIPE-399</a>]</span>  <span>[<a href="#RIPE-532" class="cite xref">RIPE-532</a>]</span>.
@@ -1754,12 +1810,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-prefix-filters-created-from" class="section-name selfRef">Prefix Filters Created from Internet Routing Registries (IRRs)</a>
         </h3>
 <p id="section-7.1-1">
-                    A more precise check can be performed when one would like to make sure that prefixes they receive are being originated or transited by Autonomous Systems (ASes) entitled to do so.
+                    A more precise check can be performed when one would like to make sure that received prefixes are being originated or transited by Autonomous Systems (ASes) entitled to do so.
                     It has been observed in the past that an AS could easily advertise someone else's prefix (or more specific prefixes) and create black holes or security threats.
                     To partially mitigate this risk, administrators would need to make sure BGP advertisements correspond to information located in the existing registries.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">
                     An Internet Routing Registry (IRR) is a database containing Internet routing information, described using Routing Policy Specification Language objects as described in RFC 4012 <span>[<a href="#RFC4012" class="cite xref">RFC4012</a>]</span>.
-                    Network administrators are given privileges to describe routing policies of their own networks in the IRR, and that information is published, usually publicly.
+                    Operators are given privileges to describe routing policies of their own networks in the IRR, and that information is published, usually publicly.
                     A majority of Regional Internet Registries do also operate an IRR and can control whether registered routes conform to the prefixes that are allocated or directly assigned.
                     However, it should be noted that the list of such prefixes is not necessarily a complete list, and as such the list of routes in an IRR is not the same as the set of RIR-allocated prefixes.
                     Furthermore, especially IRRs not operated by RIRs regularly list conflicting information, see <a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
@@ -1786,13 +1842,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         An AS-SET is an object that contains AS numbers or other AS-SETs.
                         The purpose of AS-SETs is creating a recursively queryable structure documenting the cone of an AS.
                         An operator may create an AS-SET defining all AS numbers of its customers.
-                        A Tier 1 transit provider might create an AS-SET describing the AS-SET of connected operators, which in turn describe the AS numbers of their customers.
-                        Using recursion, it is possible to retrieve from an AS-SET the complete list of AS numbers that the peer is likely to announce.
+                        A transit provider might create an AS-SET listing the AS numbers or AS-SETS of those ASes it provides upstream to. In turn, these ASes describe the AS numbers/AS-SETS of their customers, etc.
+                        Using recursion, it is possible to retrieve from an AS-SET the complete list of AS numbers that the neighbor is likely to announce.
                         For each of these AS numbers, it is also easy to look in the corresponding IRR for all associated prefixes.<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.1.2-2">
                         Please note that different IRR may provide conflicting data, especially on AS-SETs.
                         Recently, an attack was observed where a malicious party created an empty AS-SET for a large transit provider (see <span>[<a href="#NLNOG-22" class="cite xref">NLNOG-22</a>]</span>).
-                        As it was created in a database often taking precedent over other IRR sources, several ASes imported this empty AS-SET, and hence filtered all prefixes advertised by this transit provider.
+                        As it was created in an RIR database often taking precedent over other IRR sources, several ASes imported this empty AS-SET, and hence filtered all prefixes advertised by this transit provider.
                         To mitigate this issue, hierachical AS-SETs reside in the IRR of the RIR and explicitly list the ASN to which they pertain, e.g., AS65536:AS-EXAMPLE.
                         Additionally, the IRR source may also be referenced: RIPE::AS65536:AS-EXAMPLE.<a href="#section-7.1.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.1.2-3">
@@ -1806,14 +1862,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-7.1.3" class="section-number selfRef">7.1.3. </a><a href="#name-recursively-computing-filte" class="section-name selfRef">Recursively Computing Filters</a>
           </h4>
 <p id="section-7.1.3-1">
-                        Using AS-SETs and ROUTE/ROUTE6 objects, it is possible to use the IRR information to build, for a given neighbor AS, a list of originated or transited prefixes that one may accept.
+                        Using AS-SETs and ROUTE/ROUTE6 objects, it is possible to use the IRR information to build, for a given neighbor AS, a list of prefixes the neighbor is authorized to originated or transited.
                         This can be done relatively easily using scripts and existing tools capable of retrieving this information from the registries.
                         This approach is exactly the same for both IPv4 and IPv6.<a href="#section-7.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.1.3-2">
                         The macro-algorithm for the script is as follows.
-                        For the peer that is considered, the distant network administrator has provided the AS and may be able to provide an hierachically named AS-SET object (aka AS-MACRO).
-                        With these two mechanisms, a script can build, for a given peer, the list of allowed prefixes and the AS number from which they should be originated.
-                        One could decide not use the origin information and only build monolithic prefix filters from fetched data.<a href="#section-7.1.3-2" class="pilcrow">¶</a></p>
+                        For the neighbor that is considered, the distant operator has provided the AS and may be able to provide a hierachically named AS-SET object (aka AS-MACRO).
+                        With these two mechanisms, a script can build, for a given neighbor, that lists allowed prefixes and the AS number from which they should be originated.
+                        One could decide not to use the origin information and only build monolithic prefix filters from fetched data combining prefixes a neighbor is authorized to transit and originate.<a href="#section-7.1.3-2" class="pilcrow">¶</a></p>
 <p id="section-7.1.3-3">
                         As prefixes, AS numbers, and AS-SETs may not all be under the same RIR authority, it is difficult to choose for each object the appropriate IRR to poll.
                         Some IRRs have been created and are not restricted to a given region or authoritative RIR.
@@ -1824,8 +1880,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-7.1.3-4">
                         As objects in IRRs may frequently vary over time, it is important that prefix filters computed using this mechanism are refreshed regularly.
                         Refreshing the filters on a daily basis <span class="bcp14">SHOULD</span> be considered because routing changes must sometimes be done in an emergency and registries may be updated at the very last moment.
-                        Note that this approach significantly increases the complexity of the router configurations, as it can quickly add tens of thousands of configuration lines for some important peers.
-                        To manage this complexity, network administrators could use, for example, IRRToolSet <span>[<a href="#IRRToolSet" class="cite xref">IRRToolSet</a>]</span>, a set of tools making it possible to simplify the creation of automated filter configuration from policies stored in an IRR.<a href="#section-7.1.3-4" class="pilcrow">¶</a></p>
+                        Note that this approach significantly increases the complexity of the router configurations, as it can quickly add tens of thousands of configuration lines for some important neighbors, e.g., large peers or downstreams.
+                        To manage this complexity, operators could use, for example, IRRToolSet <span>[<a href="#IRRToolSet" class="cite xref">IRRToolSet</a>]</span>, a set of tools making it possible to simplify the creation of automated filter configuration from policies stored in an IRR.<a href="#section-7.1.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1856,7 +1912,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-7.2-4">
                     Implementing SIDR mechanisms is expected to solve many of the BGP routing security problems in the long term, but it may take time for deployments to be made and objects to become signed.
                     Also, note that the SIDR infrastructure is complementing (not replacing) the security best practices listed in this document.
-                    Therefore, network administrators <span class="bcp14">SHOULD</span> implement any SIDR proposed mechanism (for example, route origin validation) on top of the other existing mechanisms even if they could sometimes appear to be targeting the same goal.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+                    Therefore, operators <span class="bcp14">SHOULD</span> implement any SIDR proposed mechanism (for example, route origin validation) on top of the other existing mechanisms even if they could sometimes appear to be targeting the same goal.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 <div id="sec-sidr-rov">
 <section id="section-7.2.1">
           <h4 id="name-route-origin-validation-rov">
@@ -1877,7 +1933,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           </ul>
 <p id="section-7.2.1-3">
-                        In addition to this, network administrators <span class="bcp14">SHOULD</span> sign their routing objects so their routes can be validated by other networks running origin validation.
+                        In addition to this, operators <span class="bcp14">SHOULD</span> sign their routing objects so their routes can be validated by other networks running origin validation.
                         Please note that, when signing routing objects, operators <span class="bcp14">SHOULD</span> strive to sign exact matches of their intended announcements, see <span>[<a href="#KIRIN-22" class="cite xref">KIRIN-22</a>]</span>.
                         For example, if an operator received a /29 allocation and intends to announce it in a deaggregation of /32, the corresponding ROA should cover the /29 with a longest allowed prefix of /32, instead of signing for a deaggregation up until /48.<a href="#section-7.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-7.2.1-4">
@@ -1893,7 +1949,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </h4>
 <p id="section-7.2.2-1">
                         If autonomous system provider authorization is implemented, the reader <span class="bcp14">SHOULD</span> refer to the rules described in <span>[<a href="#I-D.ietf-sidrops-aspa-verification" class="cite xref">I-D.ietf-sidrops-aspa-verification</a>]</span>.
-                        In short, each external route received on a router <span class="bcp14">SHOULD</span> be checked against the ASPA record found in the Resource Public Key Infrastructure (RPKI) based on the relationship to the peer.<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
+                        In short, each external route received on a router <span class="bcp14">SHOULD</span> be checked against the ASPA record found in the Resource Public Key Infrastructure (RPKI) based on the relationship to the neighbor.<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2.2-2">
                         In <span>[<a href="#I-D.ietf-sidrops-aspa-verification" class="cite xref">I-D.ietf-sidrops-aspa-verification</a>]</span>, see following sections based on the neighbor relationship:<a href="#section-7.2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1927,8 +1983,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-inbound-filtering-prefixes-" class="section-name selfRef">Inbound Filtering Prefixes Belonging to the Local AS</a>
         </h3>
 <p id="section-7.3-1">
-                    A network <span class="bcp14">SHOULD</span> filter its own prefixes on peerings with all its peers (inbound direction).
-                    This prevents local traffic (from a local source to a local destination) from leaking over an external peering, in case someone else is announcing the prefix over the Internet.
+                    A network <span class="bcp14">SHOULD</span> filter its own prefixes on BGP sessions with all its neighbors (inbound direction).
+                    This prevents local traffic (from a local source to a local destination) from leaking over an external BGP session, in case someone else is announcing the prefix over the Internet.
                     This also protects the infrastructure that may directly suffer if the backbone's prefix is suddenly preferred over the Internet.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">
                     In some cases, for example, multihoming scenarios, such filters <span class="bcp14">SHOULD NOT</span> be applied, as this would break the desired redundancy.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
@@ -1943,7 +1999,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     Filtering prefixes belonging to multi-homed downstreams on sessions with other ASes is <span class="bcp14">NOT RECOMMENDED</span>.
                     This practice may lead to blackholing of traffic if the filter is semi-statically configured, i.e., not removed upon withdrawal of the specific prefix by a downstream.
                     Downstreams may choose to not advertise prefixes to an upstream for a variety of reasons, including traffic engineering and Denial-of-Service attack response.
-                    Instead, operators <span class="bcp14">SHOULD</span> assign downstreams' prefixes learned from other peers a lower priority than those routes directly learned from downstreams.
+                    Instead, operators <span class="bcp14">SHOULD</span> assign downstreams' prefixes learned from other neighbors a lower priority than those routes directly learned from downstreams.
                     This can be done, e.g., by adding additional path prepends or using local preference settings.
                     Please note, though, that using local preferences for this purpose may lead to a situation where a downstream is unable to perform traffic engineering apart from withdrawing a route towards its upstream in case of, e.g., a congested link in a multi-homed setup.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <p id="section-7.4-2">
@@ -2013,7 +2069,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                                 When advertising a route to a customer, peer, or (as a Routeserver) to an RS-Client, the OTC attribute <span class="bcp14">MUST</span> be set if it is not already present.<a href="#section-7.5.1.2-1.1" class="pilcrow">¶</a>
 </li>
               <li class="normal" id="section-7.5.1.2-1.2">
-                                Routes that have the OTC attribute set <span class="bcp14">MUST NOT</span> be exported to Upstreams, Peers, or Routeservers.<a href="#section-7.5.1.2-1.2" class="pilcrow">¶</a>
+                                Routes that have the OTC attribute set <span class="bcp14">MUST NOT</span> be exported to upstreams, peers, or routeservers.<a href="#section-7.5.1.2-1.2" class="pilcrow">¶</a>
 </li>
             </ul>
 </section>
@@ -2028,7 +2084,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-7.5.2-1">
                         Despite a fall-back mechanism being implemented to support one-sided BGP roles, they must be supported by both neighbors in a BGP session to be fully effective.
                         To completely cover an AS, all neighbors should utilize BGP roles on their sessions.
-                        Hence, if at least one peer does not yet utilize BGP roles, or if the operator cannot deploy BGP roles and/or use the OTC attribute on their own infrastructure, operators <span class="bcp14">SHOULD</span> additionally utilize BGP large-communities to annotate where they learned prefixes and filter accordingly on sessions where they re-announce these prefixes, see <span>[<a href="#RFC8195" class="cite xref">RFC8195</a>]</span>.
+                        Hence, if at least one neighbor does not yet utilize BGP roles, or if the operator cannot deploy BGP roles and/or use the OTC attribute on their own infrastructure, operators <span class="bcp14">SHOULD</span> additionally utilize BGP large-communities to annotate where they learned prefixes and filter accordingly on sessions where they re-announce these prefixes, see <span>[<a href="#RFC8195" class="cite xref">RFC8195</a>]</span>.
                         While technically possible, standard BGP communities (see <span>[<a href="#RFC1997" class="cite xref">RFC1997</a>]</span>) <span class="bcp14">SHOULD NOT</span> be used for this purpose due to the prevalence of 32bit ASNs which can only be represented in large-communities (see <span>[<a href="#RFC8092" class="cite xref">RFC8092</a>]</span>).<a href="#section-7.5.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.5.2-2">
                         Operators <span class="bcp14">SHOULD</span> designate a large community namespace for each neighbor relationship, for example, OPERATOR_ASN:100:NEIGHBOR_ASN for upstreams, OPERATOR_ASN:101:NEIGHBOR_ASN for peers, OPERATOR_ASN:102:NEIGHBOR_ASN for downstreams, etc.
@@ -2054,7 +2110,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         Within the IXP community, most IXPs prefer the IXP LAN prefix to not be advertised to the GRT (<span>[<a href="#TBD" class="cite xref">TBD</a>]</span>).
                         While some IXPs may opt to advertise the IXP LAN prefix, e.g., with the route server's ASN, operators present on an IXP <span class="bcp14">MUST</span> respect the choice of the IXP regarding the advertisement state of the IXP LAN prefix.
                         Furthermore, e.g., the RIPE region now reached consensus on reducing the initial IXP allocation size for IPv4 (see <span>[<a href="#RIPE-804" class="cite xref">RIPE-804</a>]</span>) above their own limits on maximum prefix lengths acceptable in the GRT (see  <span>[<a href="#RIPE-399" class="cite xref">RIPE-399</a>]</span> and <span>[<a href="#RIPE-532" class="cite xref">RIPE-532</a>]</span>).
-                        When a network is present on an IXP and peers with other IXP members over a common subnet (IXP LAN prefix), it <span class="bcp14">SHOULD NOT</span> accept exact matches or more-specific prefixes for the IXP LAN prefix from any of its external BGP peers.
+                        When a network is present on an IXP and has sessions with other IXP members over a common subnet (IXP LAN prefix), it <span class="bcp14">SHOULD NOT</span> accept exact matches or more-specific prefixes for the IXP LAN prefix from any of its external BGP neighbors.
                         Accepting these routes may create a black hole for connectivity to the IXP LAN.
                         To reduce the risk of accidental route leaks of IXP LAN prefixes for which the corresponding IXP opted to not have them in the GRT, operators <span class="bcp14">MAY</span> choose to use "BGP next-hop-self" on all routes learned on that IXP to not be required to distribute the IXP LAN Prefix within their IGP.
                         Furthermore, IXPs may opt to create ROAs indicating AS0 as the only valid origin AS if they want to prevent their prefixes from being announced on the Internet.<a href="#section-7.6.1-1" class="pilcrow">¶</a></p>
@@ -2122,19 +2178,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div id="sec-maximum-prefixes-on-a-peering">
 <section id="section-8.2.1">
           <h4 id="name-maximum-prefixes-on-a-singl">
-<a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-maximum-prefixes-on-a-singl" class="section-name selfRef">Maximum Prefixes on a Single Peering</a>
+<a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-maximum-prefixes-on-a-singl" class="section-name selfRef">Maximum Prefixes on a Single Session</a>
           </h4>
 <p id="section-8.2.1-1">
                         It is <span class="bcp14">RECOMMENDED</span> to configure a limit on the number of routes to be accepted from a neighbor.
                         The following rules are generally <span class="bcp14">RECOMMENDED</span>:<a href="#section-8.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.2.1-2.1">
-                            From peers, it is <span class="bcp14">RECOMMENDED</span> to have a limit lower than the number of routes in the Internet.
-                            This will shut down the BGP peering if the peer suddenly advertises the full table.
-                            Network administrators can also configure different limits for each peer, according to the number of routes they are supposed to advertise,  plus some headroom to permit growth.
+                            For peers, it is <span class="bcp14">RECOMMENDED</span> to have a limit lower than the number of routes in the Internet.
+                            This will shut down the BGP session if the neighbor suddenly advertises the full table.
+                            Operators can also configure different limits for each neighbor to which they have a peering relationshipt, according to the number of routes they are supposed to advertise,  plus some headroom to permit growth.
                             However, please note that these limits may change over time.
                             Hence, it is <span class="bcp14">RECOMMENDED</span> that both neighbors clearly communicate the number of prefixes they expect to announce to each other and agree on a way to automatically update this information in the future.
-                            At the time of writing, (<span>[<a href="#PeeringDB" class="cite xref">PeeringDB</a>]</span>) is a common source for programmatically obtaining suggested prefix limits for peers.
+                            At the time of writing, (<span>[<a href="#PeeringDB" class="cite xref">PeeringDB</a>]</span>) is a common source for programmatically obtaining suggested prefix limits for neighbors.
                             In the absence of communicated prefix limits, the number of expected prefixes can be inferred from the AS-SET, see <a href="#sec-prefix-filters-created-from-internet-routing-registries-irrs-assets" class="auto internal xref">Section 7.1.2</a>.
                             It is <span class="bcp14">RECOMMENDED</span> to include additional headroom of 20% when utilizing an inferred prefix limit.<a href="#section-8.2.1-2.1" class="pilcrow">¶</a>
 </li>
@@ -2146,7 +2202,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           </ul>
 <p id="section-8.2.1-3">
                         It is important to regularly review the limits that are configured as the Internet can quickly change over time.
-                        Some vendors propose mechanisms to have two thresholds: while the higher number specified will shut down the peering, the first threshold will only trigger a log and can be used to passively adjust limits based on observations made on the network.<a href="#section-8.2.1-3" class="pilcrow">¶</a></p>
+                        Some vendors propose mechanisms to have two thresholds: while the higher number specified will shut down the session, the first threshold will only trigger a log and can be used to passively adjust limits based on observations made on the network.<a href="#section-8.2.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-maximum-prefixes-per-as">
@@ -2175,33 +2231,33 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     This section lists the <span class="bcp14">RECOMMENDED</span> practices when processing BGP AS paths in addition the considerations from <a href="#sec-prefix-filtering" class="auto internal xref">Section 7</a>.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.3-2.1">
-                        Network administrators <span class="bcp14">SHOULD</span> should follow <a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a> to only accept 2-byte or 4-byte AS paths from customers containing ASNs belonging to (or authorized to transit through) the customer.
-                        If network administrators cannot build and generate filtering expressions to implement this, they <span class="bcp14">SHOULD</span> consider accepting only path lengths relevant to the type of customer they have (as in, if these customers are a leaf or have customers of their own) and <span class="bcp14">SHOULD</span> try to discourage excessive prepending in such paths.
+                        Operators <span class="bcp14">SHOULD</span> should follow <a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a> to only accept 2-byte or 4-byte AS paths from customers containing ASNs belonging to (or authorized to transit through) the customer.
+                        If operators cannot build and generate filtering expressions to implement this, they <span class="bcp14">SHOULD</span> consider accepting only path lengths relevant to the type of customer they have (as in, if these customers are a leaf or have customers of their own) and <span class="bcp14">SHOULD</span> try to discourage excessive prepending in such paths.
                         This loose policy <span class="bcp14">SHOULD</span> be combined with filters for specific 2-byte or 4-byte AS paths that must not be accepted if advertised by the customer, such as upstream transit providers or peer ASNs.<a href="#section-8.3-2.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.2">
-                        Network administrators <span class="bcp14">SHOULD NOT</span> accept prefixes with private AS numbers in the AS path unless the prefixes are from customers.
+                        Operators <span class="bcp14">SHOULD NOT</span> accept prefixes with private AS numbers in the AS path unless the prefixes are from customers.
                         In any case, operators <span class="bcp14">SHOULD NOT</span> re-export prefixes with AS paths containing private AS numbers.
                         An exception could occur when an upstream is offering some particular service like black-hole origination based on a private AS number:
                         in that case, prefixes <span class="bcp14">SHOULD</span> be accepted.
                         Customers should be informed by their upstream in order to put in place ad hoc policy to use such services.<a href="#section-8.3-2.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.3">
-                        Network administrators <span class="bcp14">SHOULD NOT</span> accept prefixes when the first AS number in the AS path is not the one of the peer's unless the peering is done toward a BGP route server <span>[<a href="#RFC7947" class="cite xref">RFC7947</a>]</span>  (for example, on an IXP) with transparent AS path handling.
-                        In that case, this verification needs to be deactivated, as the first AS number will be the one of an IXP member, whereas the peer AS number will be the one of the BGP route server.<a href="#section-8.3-2.3" class="pilcrow">¶</a>
+                        Operators <span class="bcp14">SHOULD NOT</span> accept prefixes when the first AS number in the AS path is not the one of the neighbor unless the BGP session is setup towards a BGP route server <span>[<a href="#RFC7947" class="cite xref">RFC7947</a>]</span>  (for example, on an IXP) with transparent AS path handling.
+                        In that case, this verification needs to be deactivated, as the first AS number will be the one of an IXP member, whereas the neighbor's AS number will be the one of the BGP route server.<a href="#section-8.3-2.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.4">
-                        Network administrators <span class="bcp14">SHOULD NOT</span> advertise prefixes with a nonempty AS path unless they are either announcing prefixes from the GRT to downstreams, or if the whole AS path is within their cone.<a href="#section-8.3-2.4" class="pilcrow">¶</a>
+                        Operators <span class="bcp14">SHOULD NOT</span> advertise prefixes with a nonempty AS path unless they are either announcing prefixes from the GRT to downstreams, or if the whole AS path is within their cone.<a href="#section-8.3-2.4" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.5">
-                        Network administrators <span class="bcp14">SHOULD NOT</span> advertise prefixes with upstream AS numbers in the AS path to any AS except to those to which they provide upstream transit.<a href="#section-8.3-2.5" class="pilcrow">¶</a>
+                        Operators <span class="bcp14">SHOULD NOT</span> advertise prefixes with upstream AS numbers in the AS path to any AS except to those to which they provide upstream transit.<a href="#section-8.3-2.5" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.6">
-                        Private AS numbers are conventionally used in contexts that are "private" and <span class="bcp14">SHOULD NOT</span> be used in advertisements to BGP peers that are not party to such private arrangements, and they <span class="bcp14">SHOULD</span> be stripped when received from BGP peers that are not party to such private arrangements.
+                        Private AS numbers are conventionally used in contexts that are "private" and <span class="bcp14">SHOULD NOT</span> be used in advertisements to BGP neighbors that are not party to such private arrangements, and they <span class="bcp14">SHOULD</span> be stripped when received from BGP neighbors that are not party to such private arrangements.
                         Additionally, operators <span class="bcp14">MAY</span> decide to not accept prefixes with private AS numbers in their AS path at all.<a href="#section-8.3-2.6" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.7">
-                        Network administrators <span class="bcp14">SHOULD NOT</span> accept their own AS number in the AS path by overriding BGP's default behavior.
+                        Operators <span class="bcp14">SHOULD NOT</span> accept their own AS number in the AS path by overriding BGP's default behavior.
                         When considering an exception, the impact (which may be severe on routing) should be evaluated carefully.<a href="#section-8.3-2.7" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.3-2.8">
@@ -2214,8 +2270,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-8.3-3">
                     AS path filtering should be further analyzed when ASN renumbering is done.
                     Such an operation is common, and mechanisms exist to allow smooth ASN migration <span>[<a href="#RFC7705" class="cite xref">RFC7705</a>]</span>.
-                    The usual migration technique, local to a router, consists in modifying the AS path so it is presented to a peer with the previous ASN, as if no renumbering was done.
-                    This makes it possible to change the ASN of a router without reconfiguring all EBGP peers at the same time (as that operation would require synchronization with all peers attached to that router).
+                    The usual migration technique, local to a router, consists in modifying the AS path so it is presented to a neighbor with the previous ASN, as if no renumbering was done.
+                    This makes it possible to change the ASN of a router without reconfiguring all eBGP neighbors at the same time (as that operation would require synchronization with all neighbors attached to that router).
                     During this renumbering operation, the rules described above may be adjusted.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2225,24 +2281,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-next-hop-filtering" class="section-name selfRef">Next-Hop Filtering</a>
         </h3>
 <p id="section-8.4-1">
-                    If peering on a shared network, like an IXP, BGP can advertise prefixes with a third-party next hop, thus directing packets not to the peer announcing the prefix but somewhere else.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+                    When establishing sessions via a shared network, like an IXP, BGP can advertise prefixes with a third-party next hop, thus directing packets not to the neighbor announcing the prefix but somewhere else.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <p id="section-8.4-2">
                     This is a desirable property for BGP route-server setups <span>[<a href="#RFC7947" class="cite xref">RFC7947</a>]</span>, where the route server will relay routing information but has neither the capacity nor the desire to receive the actual data packets.
                     So, the BGP route server will announce prefixes with a next-hop setting pointing to the router that originally announced the prefix to the route server.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
 <p id="section-8.4-3">
-                    In direct peerings between ISPs, this is undesirable, as one of the peers could trick the other one into sending packets into a black hole (unreachable next hop) or to an unsuspecting third party who would then have to carry the traffic.
+                    In direct sessions between ASes via an IXP LAN, this is undesirable, as one of the neighbors could trick the other one into sending packets into a black hole (unreachable next hop) or to an unsuspecting third party who would then have to carry the traffic.
                     Especially for black-holing, the root cause of the problem is hard to see without inspecting BGP prefixes at the receiving router of the IXP.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
 <p id="section-8.4-4">
-                    Therefore, an inbound route policy <span class="bcp14">SHOULD</span> be applied on direct peerings via an IXP LAN in order to set the next hop for accepted prefixes to the BGP peer IP address (belonging to the IXP LAN) that sent the prefix (which is what "next-hop-self" would enforce on the sending side).<a href="#section-8.4-4" class="pilcrow">¶</a></p>
+                    Therefore, an inbound route policy <span class="bcp14">SHOULD</span> be applied on direct sessions via an IXP LAN in order to set the next hop for accepted prefixes to the BGP neighbor's IP address (belonging to the IXP LAN) that sent the prefix (which is what "next-hop-self" would enforce on the sending side).<a href="#section-8.4-4" class="pilcrow">¶</a></p>
 <p id="section-8.4-5">
-                    This policy <span class="bcp14">SHOULD NOT</span> be used on route-server peerings or on peerings where network administrators intentionally permit the other side to send third-party next hops.<a href="#section-8.4-5" class="pilcrow">¶</a></p>
+                    This policy <span class="bcp14">SHOULD NOT</span> be used on sessions with route-servers or on sessions where operators intentionally permit the other side to send third-party next hops.<a href="#section-8.4-5" class="pilcrow">¶</a></p>
 <p id="section-8.4-6">
-                    This policy also <span class="bcp14">SHOULD</span> be adjusted if the best practice of Remote Triggered Black Holing (aka RTBH as described in RFC 6666 <span>[<a href="#RFC6666" class="cite xref">RFC6666</a>]</span> ) is implemented.
-                    In that case, network administrators would apply a well-known BGP next hop for routes they want to filter (if an Internet threat is observed from/to this route, for example).
+                    This policy also <span class="bcp14">SHOULD</span> be adjusted if the best practice of Remote Triggered Black Holing (aka RTBH as described in <span>[<a href="#RFC6666" class="cite xref">RFC6666</a>]</span>) is implemented.
+                    In that case, operators would apply a well-known BGP next hop for routes they want to filter (if an Internet threat is observed from/to this route, for example).
                     This well-known next hop will be statically routed to a null interface.
                     In combination with a unicast RPF check, this will discard traffic from and toward this prefix.
-                    Peers can exchange information about black holes using, for example, particular BGP communities.
-                    Network administrators could propagate black-hole information to their peers using an agreed-upon BGP community: when receiving a route with that community, a configured policy could change the next hop in order to create the black hole.<a href="#section-8.4-6" class="pilcrow">¶</a></p>
+                    BGP speakers can exchange information about black holes using, for example, particular BGP communities, see <span>[<a href="#RFC6666" class="cite xref">RFC6666</a>]</span>.
+                    Operators could propagate black-hole information to their neighbors using an agreed-upon BGP community: when receiving a route with that community, a configured policy could change the next hop in order to create the black hole.<a href="#section-8.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-bgp-community-scrubbing">
@@ -2254,14 +2310,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     Optionally, we can consider the following rules on received NLRI:<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.5-2.1">
-                        Network administrators <span class="bcp14">SHOULD</span> scrub inbound communities with their number in the high-order bits, unless they have been documented and communicated to customers/peers to be used as a signaling mechanism.
-                        Network administrators <span class="bcp14">SHOULD</span> scrub inbound large-communities with their number in the high-order bits, unless they have been documented and communicated to customers/peers to be used as a signaling mechanism.<a href="#section-8.5-2.1" class="pilcrow">¶</a>
+                        Operators <span class="bcp14">SHOULD</span> scrub inbound communities with their ASN in the high-order bits, unless they have been documented and communicated to neighbors to be used as a signaling mechanism.
+                        Operators <span class="bcp14">SHOULD</span> scrub inbound large-communities with their ASN in the high-order bits, unless they have been documented and communicated to neighbors to be used as a signaling mechanism.<a href="#section-8.5-2.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-8.5-2.2">
                         Networks administrators <span class="bcp14">SHOULD NOT</span> remove other communities applied on received routes (communities not removed after application of the previous statement).
                         In particular, they <span class="bcp14">SHOULD</span> keep original communities when they apply a community.
                         Customers might need them to communicate with upstream providers.
-                        In particular, network administrators <span class="bcp14">SHOULD NOT</span> (generally) remove the no-export community, as it is usually announced by their peer for a certain purpose.
+                        In particular, operators <span class="bcp14">SHOULD NOT</span> (generally) remove the no-export community, as it is usually announced by their neighbor for a certain purpose.
                         Similarly, network operators should not remove RTBH related communities if send by the customer for a prefix of routable size.<a href="#section-8.5-2.2" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -2300,9 +2356,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         Most vendors apply filters and changes (route maps, prefix filters, and other actions) to imported and exported NLRIs following a pre-defined sequence, while allowing redirection to other rules.
                         This means that the application of prefix filters and other rules must avoid computationally expensive setups, or setups of rules that apply computation to NLRI that will subsequently be discarded.<a href="#section-9.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1.1-2">
-                        Below, you can find an (incomplete) example for a simple inbound filter for a peering with a neighbor who has 60 prefixes in its cone creating additional load.
+                        Below, you can find an (incomplete) example for a simple inbound filter for a session with a neighbor in a peer relationship who has 60 prefixes in its cone creating additional load.
                         We assume that, accidentally, an IPv4 fulltable of 1,000,000 entries is being sent.
-                        2,500 NLRI contain unregistered/private AS numbers, 500 NLRI relate to bogon prefixes, and 5,000 NLRI are RPKI invalid, with none of the routes in the peer's cone falling in any of these categories.
+                        2,500 NLRI contain unregistered/private AS numbers, 500 NLRI relate to bogon prefixes, and 5,000 NLRI are RPKI invalid, with none of the routes in the neigbor's cone falling in any of these categories.
                         The number of operations per line are given in parentheses.<a href="#section-9.1.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1.1-3.1">
@@ -2321,7 +2377,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                             5. Reject RPKI invalid NLRI (997,000)<a href="#section-9.1.1-3.5" class="pilcrow">¶</a>
 </li>
             <li class="normal" id="section-9.1.1-3.6">
-                            6. Accept only prefixes in the peer's cone (992,000)<a href="#section-9.1.1-3.6" class="pilcrow">¶</a>
+                            6. Accept only prefixes in the neighbor's cone (992,000)<a href="#section-9.1.1-3.6" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-9.1.1-4">
@@ -2336,7 +2392,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         For the example above, this would mean, again noting the number of operations per rule:<a href="#section-9.1.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1.1-7.1">
-                            1. Reject prefixes not in the peer's cone (1,000,000)<a href="#section-9.1.1-7.1" class="pilcrow">¶</a>
+                            1. Reject prefixes not in the neighbor's cone (1,000,000)<a href="#section-9.1.1-7.1" class="pilcrow">¶</a>
 </li>
             <li class="normal" id="section-9.1.1-7.2">
                             2. Reject bogon prefixes (60)<a href="#section-9.1.1-7.2" class="pilcrow">¶</a>
@@ -2438,12 +2494,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
                         Nevertheless, the regeneration of filter rules may fail.<a href="#section-9.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-9.1.4-2">
                         Before applying a generated ruleset, an operator should check it for obvious errors and potentially require manual intervention to remediate the issue.
-                        Examples include a ruleset for a peer suddenly significantly increasing or decreasing in size, or being empty.<a href="#section-9.1.4-2" class="pilcrow">¶</a></p>
+                        Examples include a ruleset for a neighbor suddenly significantly increasing or decreasing in size, or being empty.<a href="#section-9.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-9.1.4-3">
                         In case of such a failure, each administrator <span class="bcp14">MAY</span> decide which actions they will take.
                         Options include re-using the previously active rule set, or either accepting or rejecting all routes depending on routing policy.
                         Generally accepting all routes during that time frame could break BGP routing security.
-                        However, rejecting them might re-route too much traffic on transit peers, and could cause more harm than accepting invalid prefixes.
+                        However, rejecting them might re-route too much traffic towards upstreams, and could cause more harm than accepting invalid prefixes.
                         Similarly, reusing the previously active rule set may lead to prefixes being wrongfully accepted or rejected, despite on a smaller scale than for a general accept or reject decision.<a href="#section-9.1.4-3" class="pilcrow">¶</a></p>
 <p id="section-9.1.4-4">
                         Hence, to still provide sufficient protection for an individual AS experiencing issues with rule generation, and therefore deciding to deviate to more permissive inbound filters, it is strongly <span class="bcp14">RECOMMENDED</span> that all BGP speakers in general employ inbound and outbound filtering as described in this document.<a href="#section-9.1.4-4" class="pilcrow">¶</a></p>
@@ -2458,7 +2514,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h3>
 <p id="section-9.2-1">
                     For networks that have the full Internet BGP table, policies should be applied on each BGP neighbor for received and advertised routes.
-                    It is <span class="bcp14">RECOMMENDED</span> that each Autonomous System configures rules for advertised and received routes at all its borders, as this will protect the network and its peer even in case of misconfiguration.
+                    It is <span class="bcp14">RECOMMENDED</span> that each Autonomous System configures rules for advertised and received routes at all its borders, as this will protect the network and its neighbors even in case of misconfiguration.
                     The most commonly used filtering policy is proposed in this section and uses prefix filters defined in <a href="#sec-static-prefix-filtering" class="auto internal xref">Section 6</a>, <a href="#sec-prefix-filtering" class="auto internal xref">Section 7</a>, and <a href="#sec-bgp-attribute-cleaning" class="auto internal xref">Section 8</a>.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <div id="sec-filters-with-internet-peers">
 <section id="section-9.2.1">
@@ -2480,7 +2536,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                             Hence, before applying this policy, the reader <span class="bcp14">SHOULD</span> check the impact on the filter and make sure no prefixes are filtered that should actually be accepted.<a href="#section-9.2.1.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.2.1.1-3.1">
-                                1. All prefixes not in the peer's cone based on IRR data (<a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>)<a href="#section-9.2.1.1-3.1" class="pilcrow">¶</a>
+                                1. All prefixes not in the neighbor's cone based on IRR data (<a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>)<a href="#section-9.2.1.1-3.1" class="pilcrow">¶</a>
 </li>
               <li class="normal" id="section-9.2.1.1-3.2">
                                 2. Prefixes not allocated by IANA (IPv6 only) (<a href="#sec-iana-allocated-prefix-filters" class="auto internal xref">Section 6.2.1</a>)<a href="#section-9.2.1.1-3.2" class="pilcrow">¶</a>
@@ -2522,7 +2578,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-9.2.1.1-4">
                             Note that Rule 12 <span class="bcp14">MAY</span> be formulated as an acceptance rule, i.e., accepting all prefixes that are between a /8 and a /24 for IPv4 and between a /16 and a /48 for IPv6.<a href="#section-9.2.1.1-4" class="pilcrow">¶</a></p>
 <p id="section-9.2.1.1-5">
-                            Additionally, Rule 11 <span class="bcp14">MUST NOT</span> be set for sessions with IXP routeservers, while it <span class="bcp14">SHOULD</span> be set on direct peerings via IXP LANs (see <a href="#sec-ixp-lan-prefixes" class="auto internal xref">Section 7.6</a>).<a href="#section-9.2.1.1-5" class="pilcrow">¶</a></p>
+                            Additionally, Rule 11 <span class="bcp14">MUST NOT</span> be set for sessions with IXP routeservers, while it <span class="bcp14">SHOULD</span> be set on direct sessions via IXP LANs (see <a href="#sec-ixp-lan-prefixes" class="auto internal xref">Section 7.6</a>).<a href="#section-9.2.1.1-5" class="pilcrow">¶</a></p>
 <p id="section-9.2.1.1-6">
                             If BGP roles are used, the OTC attribute should be set according to <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>.<a href="#section-9.2.1.1-6" class="pilcrow">¶</a></p>
 </section>
@@ -2581,7 +2637,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                             Nevertheless, to ensure robustness in case of failure, especially for manually operated BGP speakers, it is <span class="bcp14">RECOMMENDED</span> that operators apply the full rule-set.<a href="#section-9.2.1.2-4" class="pilcrow">¶</a></p>
 <p id="section-9.2.1.2-5">
                             Note that Rule 12 is technically not necessary for eBGP.
-                            However, in some rare cases misconfigurations or implementation errors may occur, especially when peering with a neighbor via an IXP LAN (directly or indirectly), where the implementation on the BGP speaker might export routes with a non-local next-hop.
+                            However, in some rare cases misconfigurations or implementation errors may occur, especially for sessions with a neighbor via an IXP LAN (directly or indirectly), where the implementation on the BGP speaker might export routes with a non-local next-hop.
                             While Rule 12 could prevent disturbance in such cases, the likelihood of such events is sufficiently low that operators <span class="bcp14">MAY</span> opt to not use Rule 12.<a href="#section-9.2.1.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2604,7 +2660,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                             Applying filtering close to the source ensures better debugability for such issues.<a href="#section-9.2.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.2.2.1-2.1">
-                                1. All prefixes not in the customer's cone based on IRR data (<a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>)<a href="#section-9.2.2.1-2.1" class="pilcrow">¶</a>
+                                1. All prefixes not in the neighbor's cone based on IRR data (<a href="#sec-rir-allocated-prefix-filters" class="auto internal xref">Section 7.1</a>)<a href="#section-9.2.2.1-2.1" class="pilcrow">¶</a>
 </li>
               <li class="normal" id="section-9.2.2.1-2.2">
                                 2. Prefixes not allocated by IANA (IPv6 only) (<a href="#sec-iana-allocated-prefix-filters" class="auto internal xref">Section 6.2.1</a>)<a href="#section-9.2.2.1-2.2" class="pilcrow">¶</a>
@@ -2658,7 +2714,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                             The outbound policy with customers may vary according to the routes the customer wants to receive.
                             In the simplest possible scenario, the customer may want to receive only the default route; this can be done easily by applying a filter with the default route only.<a href="#section-9.2.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-9.2.2.2-2">
-                            In case the customer wants to receive the full routing table (if it is multihomed or if it wants to have a view of the Internet table), the following filters <span class="bcp14">SHOULD</span> be applied on the BGP peering:<a href="#section-9.2.2.2-2" class="pilcrow">¶</a></p>
+                            In case the customer wants to receive the full routing table (if it is multihomed or if it wants to have a view of the Internet table), the following filters <span class="bcp14">SHOULD</span> be applied on the BGP session:<a href="#section-9.2.2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.2.2.2-3.1">
                                 1. Prefixes not allocated by IANA (IPv6 only) (<a href="#sec-iana-allocated-prefix-filters" class="auto internal xref">Section 6.2.1</a>)<a href="#section-9.2.2.2-3.1" class="pilcrow">¶</a>
@@ -2694,10 +2750,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-9.2.2.2-4">
                             In some cases, the customer may desire to receive the default route in addition to the full BGP table.
                             This can be done by the provider removing the filter for the default route in Rule 7.
-                            As the default route may not be present in the routing table, network administrators <span class="bcp14">SHOULD</span> only originate it for neighbors that requested it.<a href="#section-9.2.2.2-4" class="pilcrow">¶</a></p>
+                            As the default route may not be present in the routing table, operators <span class="bcp14">SHOULD</span> only originate it for neighbors that requested it.<a href="#section-9.2.2.2-4" class="pilcrow">¶</a></p>
 <p id="section-9.2.2.2-5">
                             Note that Rule 9 is technically not necessary for eBGP.
-                            However, in some rare cases misconfigurations or implementation errors may occur, especially when peering with a neighbor via an IXP LAN (directly or indirectly), where the implementation on the BGP speaker might export routes with a non-local next-hop.
+                            However, in some rare cases misconfigurations or implementation errors may occur, especially on sessions with a neighbor via an IXP LAN (directly or indirectly), where the implementation on the BGP speaker might export routes with a non-local next-hop.
                             While Rule 9 could prevent disturbance in such cases, the likelihood of such events is sufficiently low that operators <span class="bcp14">MAY</span> opt to not use Rule 9.<a href="#section-9.2.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
