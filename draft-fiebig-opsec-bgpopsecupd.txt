@@ -5,10 +5,10 @@
 Operational Security Capabilities for IP Network InfrastructureT. Fiebig
 Internet-Draft                                                   MPI-INF
 Intended status: Best Current Practice                       C. Martinez
-Expires: 12 April 2024                                            LACNIC
+Expires: 13 April 2024                                            LACNIC
                                                                Q. Misell
                                                                 AS207960
-                                                         10 October 2023
+                                                         11 October 2023
 
 
                   Updated BGP Operations and Security
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 April 2024.
+   This Internet-Draft will expire on 13 April 2024.
 
 Copyright Notice
 
@@ -188,6 +188,9 @@ Table of Contents
    LIR:
       Local Internet Registry
 
+   NLRI:
+      Network Layer Reachability Information
+
    OTC:
       Only To Customer BGP Attribute
 
@@ -230,11 +233,12 @@ Table of Contents
       Accepting a prefix advertised by a neighbor and considering it for
       route selection and import into the local AS' routing table.
 
-   Originating a Prefix:
-      Advertising a prefix with an empty AS-Path.
-
    Network edge:
       Last routers under the control of an operator.
+
+   Mutual Upstream:
+      When two directly connected ASes both advertise a BGP fulltable to
+      each other.  (See: [I-D.ietf-sidrops-aspa-verification])
 
    Upstream:
       In a direct relationship between two ASes the one providing
@@ -247,14 +251,13 @@ Table of Contents
       as well as defining and setting policies for all BGP speakers
       within an organization.
 
+   Originating a Prefix:
+      Advertising a prefix with an empty AS-Path.
+
    Peer:
       Two directly connected ASes who only advertise routes they
       originate or learned from their downstreams to each other.  (See:
       [RFC9234])
-
-   Mutual Upstream:
-      When two directly connected ASes both advertise a BGP fulltable to
-      each other.  (See: [I-D.ietf-sidrops-aspa-verification])
 
    Providing Transit:
       Forwarding packets destined for addresses in an advertised prefix.
@@ -680,9 +683,9 @@ Table of Contents
    router configurations, as it can quickly add tens of thousands of
    configuration lines for some important neighbors, e.g., large peers
    or downstreams.  To manage this complexity, operators could use, for
-   example, IRRToolSet [IRRToolSet], a set of tools making it possible
-   to simplify the creation of automated filter configuration from
-   policies stored in an IRR.
+   example, bgpq4 [bgpq4], a set of tools making it possible to simplify
+   the creation of automated filter configuration from policies stored
+   in an IRR.
 
 7.2.  SIDR - Secure Inter-Domain Routing: RPKI and ASPA
 
@@ -2052,9 +2055,8 @@ Table of Contents
    [OpenBGPd] OpenBSD Project, "OpenBGPD 8.2 released",
               <https://marc.info/?l=openbsd-announce&m=169624217322602>.
 
-   [IRRToolSet]
-              ISC, "IRRToolSet project page",
-              <http://irrtoolset.isc.org>.
+   [bgpq4]    Snijders, J., "bgpq4 Git Repository",
+              <https://github.com/bgp/bgpq4>.
 
    [hotRPKI]  Cooper, D., Heilman, E., Brogle, K., Reyzin, L., and S.
               Goldberg, "", DOI 10.1145/2535771.2535787, November 2013,
