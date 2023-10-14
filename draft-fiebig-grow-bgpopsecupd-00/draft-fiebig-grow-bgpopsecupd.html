@@ -12,8 +12,16 @@
                 Due to this central nature, it is important to understand the security and reliability measures that can and should be deployed to prevent accidental or intentional routing disturbances.
        
        
-                This document describes measures to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
+                Previously, security considerations for BGP have been described in  .
+                Since the publications of  , several developments and changes in operational practice took place that warrant an update of these best current practices.
+       
+       
+                This document updates  , reiterating the best practices for BGP security from that document and adding new practices and recommendations that emerged since the publication of  .
+                In the current version, this document covers practices to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
                 It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.
+       
+       
+                Newly added information and improvements include a unification of terminology, orienting it in  , changing recommendations regarding IXP LAN prefixes to align with operational practice, discussing ASPA and BGP roles, expanding on community scrubbing, filter generation and evaluation practices to limit performance overhead, expanding on outbound and internal filtering for defense in depth, global prefix limits, and community based filtering for downstream prefixes.
        
     " name="description">
 <meta content="xml2rfc 3.18.1" name="generator">
@@ -1070,8 +1078,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 The Border Gateway Protocol (BGP) is the protocol almost exclusively used in the Internet to exchange routing information between network domains.
                 Due to this central nature, it is important to understand the security and reliability measures that can and should be deployed to prevent accidental or intentional routing disturbances.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">
-                This document describes measures to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
-                It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+                Previously, security considerations for BGP have been described in <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>.
+                Since the publications of <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>, several developments and changes in operational practice took place that warrant an update of these best current practices.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">
+                This document updates <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>, reiterating the best practices for BGP security from that document and adding new practices and recommendations that emerged since the publication of <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>.
+                In the current version, this document covers practices to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
+                It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-4">
+                Newly added information and improvements include a unification of terminology, orienting it in <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>, changing recommendations regarding IXP LAN prefixes to align with operational practice, discussing ASPA and BGP roles, expanding on community scrubbing, filter generation and evaluation practices to limit performance overhead, expanding on outbound and internal filtering for defense in depth, global prefix limits, and community based filtering for downstream prefixes.<a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1349,24 +1363,27 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1381,18 +1398,17 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 The Border Gateway Protocol (BGP), specified in <span>[<a href="#RFC4271" class="cite xref">RFC4271</a>]</span>, is the protocol used in the Internet to exchange routing information between network domains.
                 BGP does not directly include mechanisms that control whether the routes exchanged conform to the various guidelines defined by the Internet community.
                 This document intends to both summarize common existing guidelines and help operators apply coherent BGP policies.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<div id="sec-requirements-language">
 <section id="section-1.1">
         <h3 id="name-requirements-language">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements-language" class="section-name selfRef">Requirements Language</a>
         </h3>
-<p id="section-1.1-1">The key words <span class="bcp14">MUST</span>, <span class="bcp14">MUST NOT</span>, <span class="bcp14">REQUIRED</span>, <span class="bcp14">SHALL</span>,
-                    <span class="bcp14">SHALL NOT</span>, <span class="bcp14">SHOULD</span>, <span class="bcp14">SHOULD NOT</span>, <span class="bcp14">RECOMMENDED</span>,
-                    <span class="bcp14">NOT RECOMMENDED</span>, <span class="bcp14">MAY</span>, and <span class="bcp14">OPTIONAL</span> in this document are to be
-                    interpreted as described in <span>[<a href="#BCP14" class="cite xref">BCP14</a>]</span> when, and only when, they appear in all capitals,
-                    as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+                  "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT
+                  RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+                  interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span>
+          <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in
+                  all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 </section>
-</div>
 </section>
 </div>
 <div id="sec-scope-of-the-document">
@@ -1605,7 +1621,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-integrity-verification-and-" class="section-name selfRef">Integrity Verification and Authentication</a>
           </h4>
 <p id="section-5.1.1-1">
-                        MD5 protection of the TCP session header, described in <span>[<a href="#RFC2385" class="cite xref">RFC2385</a>]</span>, was the first available mechanism to protect the integrity of a BGP session.
+                        MD5 protection of the TCP session header, described in <span>[<a href="#RFC5925" class="cite xref">RFC5925</a>]</span>, was the first available mechanism to protect the integrity of a BGP session.
                         It has been obsoleted by the TCP Authentication Option (TCP-AO; <span>[<a href="#RFC5925" class="cite xref">RFC5925</a>]</span>), which offers stronger protection.
                         While MD5 is still the most used mechanism due to its availability in vendors' equipment, TCP-AO <span class="bcp14">SHOULD</span> be preferred when implemented by both sides of a session.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-2">
@@ -2921,37 +2937,45 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </div>
 </section>
 </div>
-<div id="sec-security-considerations">
+<div id="sec-iana-considerations">
 <section id="section-10">
-      <h2 id="name-security-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      <h2 id="name-iana-considerations">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <p id="section-10-1">
-                This document is entirely about BGP operational security.
-                The document understands security not only as resilience against attacks, but also in the context of safety, i.e., ensuring that systems remain operational and behave as expected even if individual components fail or are mishandled.
-                It depicts best practices that one should adopt to secure BGP infrastructure: protecting BGP routers and BGP sessions, adopting consistent BGP prefix and AS path filters, and configuring other options to secure the BGP network.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">
-                This document does not aim to describe specific BGP implementations, their potential vulnerabilities, or ways they handle errors.
-                It does not detail how protection could be enforced against attack techniques using crafted packets.<a href="#section-10-2" class="pilcrow">¶</a></p>
+                This document does not require any IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-security-considerations">
 <section id="section-11">
-      <h2 id="name-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+      <h2 id="name-security-considerations">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<section id="section-11.1">
+<p id="section-11-1">
+                This document is entirely about BGP operational security.
+                The document understands security not only as resilience against attacks, but also in the context of safety, i.e., ensuring that systems remain operational and behave as expected even if individual components fail or are mishandled.
+                It depicts best practices that one should adopt to secure BGP infrastructure: protecting BGP routers and BGP sessions, adopting consistent BGP prefix and AS path filters, and configuring other options to secure the BGP network.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">
+                This document does not aim to describe specific BGP implementations, their potential vulnerabilities, or ways they handle errors.
+                It does not detail how protection could be enforced against attack techniques using crafted packets.<a href="#section-11-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-12">
+      <h2 id="name-references">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-12.1">
         <h3 id="name-normative-references">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="BCP14">[BCP14]</dt>
+<dt id="RFC2119">[RFC2119]</dt>
         <dd>
-<div class="refInstance" id="RFC2119">
-            <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>. </div>
-<div class="refInstance" id="RFC8174">
-            <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>. </div>
-<span>&lt;<a href="https://www.rfc-editor.org/info/bcp14">https://www.rfc-editor.org/info/bcp14</a>&gt;</span>
-</dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4271">[RFC4271]</dt>
         <dd>
@@ -2981,10 +3005,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <dd>
 <span class="refAuthor">Heitz, J., Ed.</span>, <span class="refAuthor">Snijders, J., Ed.</span>, <span class="refAuthor">Patel, K.</span>, <span class="refAuthor">Bagdonas, I.</span>, and <span class="refAuthor">N. Hilliard</span>, <span class="refTitle">"BGP Large Communities Attribute"</span>, <span class="seriesInfo">RFC 8092</span>, <span class="seriesInfo">DOI 10.17487/RFC8092</span>, <time datetime="2017-02" class="refDate">February 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8092">https://www.rfc-editor.org/info/rfc8092</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC8195">[RFC8195]</dt>
-        <dd>
-<span class="refAuthor">Snijders, J.</span>, <span class="refAuthor">Heasley, J.</span>, and <span class="refAuthor">M. Schmidt</span>, <span class="refTitle">"Use of BGP Large Communities"</span>, <span class="seriesInfo">RFC 8195</span>, <span class="seriesInfo">DOI 10.17487/RFC8195</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8195">https://www.rfc-editor.org/info/rfc8195</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC8201">[RFC8201]</dt>
         <dd>
 <span class="refAuthor">McCann, J.</span>, <span class="refAuthor">Deering, S.</span>, <span class="refAuthor">Mogul, J.</span>, and <span class="refAuthor">R. Hinden, Ed.</span>, <span class="refTitle">"Path MTU Discovery for IP version 6"</span>, <span class="seriesInfo">STD 87</span>, <span class="seriesInfo">RFC 8201</span>, <span class="seriesInfo">DOI 10.17487/RFC8201</span>, <time datetime="2017-07" class="refDate">July 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8201">https://www.rfc-editor.org/info/rfc8201</a>&gt;</span>. </dd>
@@ -3007,9 +3027,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-11.2">
+<section id="section-12.2">
         <h3 id="name-informative-references">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC1191">[RFC1191]</dt>
@@ -3023,10 +3043,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt id="RFC1997">[RFC1997]</dt>
         <dd>
 <span class="refAuthor">Chandra, R.</span>, <span class="refAuthor">Traina, P.</span>, and <span class="refAuthor">T. Li</span>, <span class="refTitle">"BGP Communities Attribute"</span>, <span class="seriesInfo">RFC 1997</span>, <span class="seriesInfo">DOI 10.17487/RFC1997</span>, <time datetime="1996-08" class="refDate">August 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc1997">https://www.rfc-editor.org/info/rfc1997</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC2385">[RFC2385]</dt>
-        <dd>
-<span class="refAuthor">Heffernan, A.</span>, <span class="refTitle">"Protection of BGP Sessions via the TCP MD5 Signature Option"</span>, <span class="seriesInfo">RFC 2385</span>, <span class="seriesInfo">DOI 10.17487/RFC2385</span>, <time datetime="1998-08" class="refDate">August 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2385">https://www.rfc-editor.org/info/rfc2385</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2827">[RFC2827]</dt>
         <dd>
@@ -3071,6 +3087,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt id="RFC7947">[RFC7947]</dt>
         <dd>
 <span class="refAuthor">Jasinska, E.</span>, <span class="refAuthor">Hilliard, N.</span>, <span class="refAuthor">Raszuk, R.</span>, and <span class="refAuthor">N. Bakker</span>, <span class="refTitle">"Internet Exchange BGP Route Server"</span>, <span class="seriesInfo">RFC 7947</span>, <span class="seriesInfo">DOI 10.17487/RFC7947</span>, <time datetime="2016-09" class="refDate">September 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7947">https://www.rfc-editor.org/info/rfc7947</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8195">[RFC8195]</dt>
+        <dd>
+<span class="refAuthor">Snijders, J.</span>, <span class="refAuthor">Heasley, J.</span>, and <span class="refAuthor">M. Schmidt</span>, <span class="refTitle">"Use of BGP Large Communities"</span>, <span class="seriesInfo">RFC 8195</span>, <span class="seriesInfo">DOI 10.17487/RFC8195</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8195">https://www.rfc-editor.org/info/rfc8195</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9229">[RFC9229]</dt>
         <dd>

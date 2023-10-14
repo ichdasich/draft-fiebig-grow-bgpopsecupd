@@ -19,13 +19,30 @@ Abstract
    the security and reliability measures that can and should be deployed
    to prevent accidental or intentional routing disturbances.
 
-   This document describes measures to protect the BGP sessions itself
-   such as Time to Live (TTL), the TCP Authentication Option (TCP-AO),
-   and control-plane filtering.  It also describes measures to better
-   control the flow of routing information, using prefix filtering and
-   automation of prefix filters, max-prefix filtering, Autonomous
-   System(AS) path filtering, route flap dampening, and BGP community
-   scrubbing.
+   Previously, security considerations for BGP have been described in
+   [RFC7454].  Since the publications of [RFC7454], several developments
+   and changes in operational practice took place that warrant an update
+   of these best current practices.
+
+   This document updates [RFC7454], reiterating the best practices for
+   BGP security from that document and adding new practices and
+   recommendations that emerged since the publication of [RFC7454].  In
+   the current version, this document covers practices to protect the
+   BGP sessions itself such as Time to Live (TTL), the TCP
+   Authentication Option (TCP-AO), and control-plane filtering.  It also
+   describes measures to better control the flow of routing information,
+   using prefix filtering and automation of prefix filters, max-prefix
+   filtering, Autonomous System(AS) path filtering, route flap
+   dampening, and BGP community scrubbing.
+
+   Newly added information and improvements include a unification of
+   terminology, orienting it in [RFC9234], changing recommendations
+   regarding IXP LAN prefixes to align with operational practice,
+   discussing ASPA and BGP roles, expanding on community scrubbing,
+   filter generation and evaluation practices to limit performance
+   overhead, expanding on outbound and internal filtering for defense in
+   depth, global prefix limits, and community based filtering for
+   downstream prefixes.
 
 Status of This Memo
 
@@ -124,10 +141,11 @@ Table of Contents
        9.3.2.  Outbound Filtering
      9.4.  Prefix Filtering Recommendations for Mutual Transit
      9.5.  Prefix Filtering Recommendations for iBGP
-   10. Security Considerations
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
+   10. IANA Considerations
+   11. Security Considerations
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgements
    Author's Address
 
@@ -143,10 +161,11 @@ Table of Contents
 
 1.1.  Requirements Language
 
-   The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD,
-   SHOULD NOT, RECOMMENDED, NOT RECOMMENDED, MAY, and OPTIONAL in this
-   document are to be interpreted as described in [BCP14] when, and only
-   when, they appear in all capitals, as shown here.
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 2.  Scope of the Document
 
@@ -356,7 +375,7 @@ Table of Contents
 
 5.1.1.  Integrity Verification and Authentication
 
-   MD5 protection of the TCP session header, described in [RFC2385], was
+   MD5 protection of the TCP session header, described in [RFC5925], was
    the first available mechanism to protect the integrity of a BGP
    session.  It has been obsoleted by the TCP Authentication Option
    (TCP-AO; [RFC5925]), which offers stronger protection.  While MD5 is
@@ -1777,7 +1796,11 @@ Table of Contents
    is RECOMMENDED that at least Rule 1 is applied to iBGP sessions to
    ensure absent annotations do not propagate and cause route leaks.
 
-10.  Security Considerations
+10.  IANA Considerations
+
+   This document does not require any IANA actions.
+
+11.  Security Considerations
 
    This document is entirely about BGP operational security.  The
    document understands security not only as resilience against attacks,
@@ -1793,17 +1816,18 @@ Table of Contents
    not detail how protection could be enforced against attack techniques
    using crafted packets.
 
-11.  References
+12.  References
 
-11.1.  Normative References
+12.1.  Normative References
 
-   [BCP14]    Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
-              Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, May 2017.
-
-              <https://www.rfc-editor.org/info/bcp14>
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
    [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
               Border Gateway Protocol 4 (BGP-4)", RFC 4271,
@@ -1839,10 +1863,6 @@ Table of Contents
               RFC 8092, DOI 10.17487/RFC8092, February 2017,
               <https://www.rfc-editor.org/info/rfc8092>.
 
-   [RFC8195]  Snijders, J., Heasley, J., and M. Schmidt, "Use of BGP
-              Large Communities", RFC 8195, DOI 10.17487/RFC8195, June
-              2017, <https://www.rfc-editor.org/info/rfc8195>.
-
    [RFC8201]  McCann, J., Deering, S., Mogul, J., and R. Hinden, Ed.,
               "Path MTU Discovery for IP version 6", STD 87, RFC 8201,
               DOI 10.17487/RFC8201, July 2017,
@@ -1874,7 +1894,7 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-sidrops-
               aspa-verification-16>.
 
-11.2.  Informative References
+12.2.  Informative References
 
    [RFC1191]  Mogul, J. and S. Deering, "Path MTU discovery", RFC 1191,
               DOI 10.17487/RFC1191, November 1990,
@@ -1888,10 +1908,6 @@ Table of Contents
    [RFC1997]  Chandra, R., Traina, P., and T. Li, "BGP Communities
               Attribute", RFC 1997, DOI 10.17487/RFC1997, August 1996,
               <https://www.rfc-editor.org/info/rfc1997>.
-
-   [RFC2385]  Heffernan, A., "Protection of BGP Sessions via the TCP MD5
-              Signature Option", RFC 2385, DOI 10.17487/RFC2385, August
-              1998, <https://www.rfc-editor.org/info/rfc2385>.
 
    [RFC2827]  Ferguson, P. and D. Senie, "Network Ingress Filtering:
               Defeating Denial of Service Attacks which employ IP Source
@@ -1942,6 +1958,10 @@ Table of Contents
               "Internet Exchange BGP Route Server", RFC 7947,
               DOI 10.17487/RFC7947, September 2016,
               <https://www.rfc-editor.org/info/rfc7947>.
+
+   [RFC8195]  Snijders, J., Heasley, J., and M. Schmidt, "Use of BGP
+              Large Communities", RFC 8195, DOI 10.17487/RFC8195, June
+              2017, <https://www.rfc-editor.org/info/rfc8195>.
 
    [RFC9229]  Chroboczek, J., "IPv4 Routes with an IPv6 Next Hop in the
               Babel Routing Protocol", RFC 9229, DOI 10.17487/RFC9229,
