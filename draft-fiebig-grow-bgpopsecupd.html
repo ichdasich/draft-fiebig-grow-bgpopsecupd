@@ -12,8 +12,16 @@
                 Due to this central nature, it is important to understand the security and reliability measures that can and should be deployed to prevent accidental or intentional routing disturbances.
        
        
-                This document describes measures to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
+                Previously, security considerations for BGP have been described in  .
+                Since the publications of  , several developments and changes in operational practice took place that warrant an update of these best current practices.
+       
+       
+                This document updates  , reiterating the best practices for BGP security from that document and adding new practices and recommendations that emerged since the publication of  .
+                In the current version, this document covers practices to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
                 It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.
+       
+       
+                Newly added information and improvements include a unification of terminology, orienting it in  , changing recommendations regarding IXP LAN prefixes to align with operational practice, discussing ASPA and BGP roles, expanding on community scrubbing, filter generation and evaluation practices to limit performance overhead, expanding on outbound and internal filtering for defense in depth, global prefix limits, and community based filtering for downstream prefixes.
        
     " name="description">
 <meta content="xml2rfc 3.18.1" name="generator">
@@ -1070,8 +1078,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 The Border Gateway Protocol (BGP) is the protocol almost exclusively used in the Internet to exchange routing information between network domains.
                 Due to this central nature, it is important to understand the security and reliability measures that can and should be deployed to prevent accidental or intentional routing disturbances.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">
-                This document describes measures to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
-                It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+                Previously, security considerations for BGP have been described in <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>.
+                Since the publications of <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>, several developments and changes in operational practice took place that warrant an update of these best current practices.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">
+                This document updates <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>, reiterating the best practices for BGP security from that document and adding new practices and recommendations that emerged since the publication of <span>[<a href="#RFC7454" class="cite xref">RFC7454</a>]</span>.
+                In the current version, this document covers practices to protect the BGP sessions itself such as Time to Live (TTL), the TCP Authentication Option (TCP-AO), and control-plane filtering.
+                It also describes measures to better control the flow of routing information, using prefix filtering and automation of prefix filters, max-prefix filtering, Autonomous System(AS) path filtering, route flap dampening, and BGP community scrubbing.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-4">
+                Newly added information and improvements include a unification of terminology, orienting it in <span>[<a href="#RFC9234" class="cite xref">RFC9234</a>]</span>, changing recommendations regarding IXP LAN prefixes to align with operational practice, discussing ASPA and BGP roles, expanding on community scrubbing, filter generation and evaluation practices to limit performance overhead, expanding on outbound and internal filtering for defense in depth, global prefix limits, and community based filtering for downstream prefixes.<a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
