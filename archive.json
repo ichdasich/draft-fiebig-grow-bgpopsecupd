@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-22T00:13:12.219998+00:00",
+  "timestamp": "2023-10-24T00:12:08.969845+00:00",
   "repo": "ichdasich/draft-fiebig-grow-bgpopsecupd",
   "labels": [
     {
@@ -49,6 +49,71 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOKcyvv850nwyp",
+      "title": "Add note on honoring GSHUT on IXPs",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/1",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "At the moment the draft does not discuss honoring GSHUT on IXPs.\r\n\r\nAs this is crucial for being able to drain traffic, adding a note might be useful.",
+      "createdAt": "2023-10-23T08:00:57Z",
+      "updatedAt": "2023-10-23T08:00:57Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOKcyvv850nxNw",
+      "title": "Discuss use of lpref on IXP RS",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/2",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding a note on the use of lpref on IXPs that prevent draining traffic (related to #1) might make sense.",
+      "createdAt": "2023-10-23T08:02:00Z",
+      "updatedAt": "2023-10-23T08:02:00Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOKcyvv850nx46",
+      "title": "Add note on need for individual judgement",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/3",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "As noted by GD, it is still a \"my network, my rules\" thing. The introduction should explicitly mention that the BP should be considered by individual operators, and there may be very good reasons to deviate, e.g., limited vendor support.",
+      "createdAt": "2023-10-23T08:03:24Z",
+      "updatedAt": "2023-10-23T08:03:24Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKcyvv850nyW8",
+      "title": "Discussing MED based oscilation (RFC7964)",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/4",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "With RS MED can lead to route oscillation overloading speakers. This is discussed in RFC7964, and a note on monitoring for that/precautions might be useful.",
+      "createdAt": "2023-10-23T08:04:27Z",
+      "updatedAt": "2023-10-23T08:04:27Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": []
 }
