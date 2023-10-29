@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-10-26T00:11:59.631061+00:00",
+  "timestamp": "2023-10-29T00:13:01.183659+00:00",
   "repo": "ichdasich/draft-fiebig-grow-bgpopsecupd",
   "labels": [
     {
@@ -111,6 +111,38 @@
       "body": "With RS MED can lead to route oscillation overloading speakers. This is discussed in RFC7964, and a note on monitoring for that/precautions might be useful.",
       "createdAt": "2023-10-23T08:04:27Z",
       "updatedAt": "2023-10-23T08:04:27Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOKcyvv851CI_5",
+      "title": "Expand Community filtering",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/5",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Martin Pels notes:\r\n- I think extended (RFC4360) communities should also be added here.\r\n- Another point to add in this section is scrubbing communities from a received route if the number of attached communities is excessively high (e.g. > 100).",
+      "createdAt": "2023-10-26T12:50:13Z",
+      "updatedAt": "2023-10-26T12:50:13Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOKcyvv851CJSB",
+      "title": "Adjust attribute scrubbing",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/6",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Martin Pels notes:\r\n\r\n- Add MAY for scrubbing of attributes\r\n\r\n\"operators MAY opt to scrub all BGP attributes known to cause service \r\ndisruptions\"\r\n\r\nI would suggest replacing the word \"all\" with \"specific\", or to add a \r\nline explicitly clarifying not to scrub unknown transitive attributes.",
+      "createdAt": "2023-10-26T12:50:53Z",
+      "updatedAt": "2023-10-26T12:50:53Z",
       "closedAt": null,
       "comments": []
     }
