@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-05T00:13:14.490784+00:00",
+  "timestamp": "2023-11-07T00:12:27.342244+00:00",
   "repo": "ichdasich/draft-fiebig-grow-bgpopsecupd",
   "labels": [
     {
@@ -145,6 +145,30 @@
       "updatedAt": "2023-10-26T12:50:53Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOKcyvv852ApkW",
+      "title": "Add to 7.2.2 or similar that using communities to signal validation status is a bad idea",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/7",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "appending a community to signal the validation status of a prefix is generally considered a bad idea",
+      "createdAt": "2023-11-06T19:09:03Z",
+      "updatedAt": "2023-11-06T19:16:13Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "job",
+          "authorAssociation": "NONE",
+          "body": "Yes.\r\n\r\nI have plans to specifically address this issue in a new internet-draft\r\n\u201cAssociating validation states with BGP communities considered harmful\u201d.\r\n\r\nI think it\u2019s worth spending a few pages on this on *why* exactly it\u2019s a bad\r\nidea. Perhaps useful to refer to that to-be-written doc instead of pulling\r\nin walls of text?\r\n",
+          "createdAt": "2023-11-06T19:16:12Z",
+          "updatedAt": "2023-11-06T19:16:12Z"
+        }
+      ]
     }
   ],
   "pulls": []
