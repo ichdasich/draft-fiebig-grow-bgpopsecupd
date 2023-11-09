@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-07T00:12:27.342244+00:00",
+  "timestamp": "2023-11-09T00:12:18.340722+00:00",
   "repo": "ichdasich/draft-fiebig-grow-bgpopsecupd",
   "labels": [
     {
@@ -158,7 +158,7 @@
       "labels": [],
       "body": "appending a community to signal the validation status of a prefix is generally considered a bad idea",
       "createdAt": "2023-11-06T19:09:03Z",
-      "updatedAt": "2023-11-06T19:16:13Z",
+      "updatedAt": "2023-11-07T17:27:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -167,6 +167,13 @@
           "body": "Yes.\r\n\r\nI have plans to specifically address this issue in a new internet-draft\r\n\u201cAssociating validation states with BGP communities considered harmful\u201d.\r\n\r\nI think it\u2019s worth spending a few pages on this on *why* exactly it\u2019s a bad\r\nidea. Perhaps useful to refer to that to-be-written doc instead of pulling\r\nin walls of text?\r\n",
           "createdAt": "2023-11-06T19:16:12Z",
           "updatedAt": "2023-11-06T19:16:12Z"
+        },
+        {
+          "author": "ichdasich",
+          "authorAssociation": "OWNER",
+          "body": "Makes sense; Will keep an eye out for the draft and use a template reference until it is out.",
+          "createdAt": "2023-11-07T17:27:17Z",
+          "updatedAt": "2023-11-07T17:27:17Z"
         }
       ]
     }
