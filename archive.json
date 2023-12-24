@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-21T00:12:52.681905+00:00",
+  "timestamp": "2023-12-24T00:13:53.520083+00:00",
   "repo": "ichdasich/draft-fiebig-grow-bgpopsecupd",
   "labels": [
     {
@@ -176,6 +176,22 @@
           "updatedAt": "2023-11-07T17:27:17Z"
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOKcyvv856VG8y",
+      "title": "Discuss idempotency for automation/config updates",
+      "url": "https://github.com/ichdasich/draft-fiebig-grow-bgpopsecupd/issues/8",
+      "state": "OPEN",
+      "author": "ichdasich",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-12-21T12:40:43Z",
+      "updatedAt": "2023-12-21T12:40:43Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": []
